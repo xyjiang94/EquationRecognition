@@ -3,7 +3,7 @@ close all;
 parts = strsplit(mfilename('fullpath'), filesep);
 DirPart = mfilename('fullpath');
 DirPart = DirPart(1:end-length(parts{end}));
-I = imread([DirPart 'equations' filesep 'SKMBT_36317040717260_eq16.png']);
+I = imread([DirPart 'equations' filesep 'SKMBT_36317040717260_eq3.png']);
 BW = im2bw(I, 0.1);
 
 
