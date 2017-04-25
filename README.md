@@ -9,4 +9,4 @@
 Recognize hand-written equations.
 
 ## Version
-0.0
+0.1
