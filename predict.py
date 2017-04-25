@@ -4,6 +4,7 @@ from glob import glob
 from scipy import misc
 import numpy as np
 import random
+from segmentation import *
 """
 add whatever you think it's essential here
 """
@@ -34,7 +35,7 @@ class ImgPred():
 	def __init__(self,image_name,sym_pred_list,latex = 'LATEX_REPR'):
 		"""
 		sym_pred_list is list of SymPred
-		latex is the latex representation of the equation 
+		latex is the latex representation of the equation
 		"""
 		self.image_name = image_name
 		self.latex = latex
@@ -53,9 +54,14 @@ def predict(image_path):
 	#Don't forget to store your prediction into ImgPred
 	img_prediction = ImgPred(...)
 	"""
-	return img_prediction
+	print image_path
+	seg = Segmentation(image_path)
+	print seg
+	return 0#img_prediction
+
 if __name__ == '__main__':
 	image_folder_path = argv[1]
+	isWindows_flag = False
 	if len(argv) == 3:
 		isWindows_flag = True
 	if isWindows_flag:
