@@ -41,7 +41,6 @@ for e in files:
         tmp = []
         symbol = h.group(1)
         img = input_wrapper(join(imgFolderPath, e))
-        misc.imsave("example.png",img)
         tmp.append(img)
         tmp.append(symbol)
         sh[str(counter)] = tmp
