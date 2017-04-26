@@ -21,12 +21,15 @@ class Segmentation(object):
         threshold = 50
         # find connected components
         self.img, self.count = ndimage.label(imgf > threshold)
-        self.labels = self.get_labels()
+        self.labels = self.calculate_labels()
 
     def get_labels(self):
+        return self.labels
+
+    def calculate_labels(self):
         labels = {}
         for label in range(1, self.count + 1):
-            labels[label] = [-1,-1,-1,-1]
+            labels[label] = [sys.maxint,-1,sys.maxint,-1]
 
         img = self.img
         for row in range(img.shape[0]):
@@ -34,12 +37,14 @@ class Segmentation(object):
                 value = img[row][col]
                 if value != 0:
                     bounding = labels[value]
-                    if bounding[0] == -1:
+                    if bounding[0] > row:
                         bounding[0] = row
-                    if bounding[2] == -1:
+                    if bounding[2] > col:
                         bounding[2] = col
-                    bounding[1] = row
-                    bounding[3] = col
+                    if bounding[1] < row:
+                        bounding[1] = row
+                    if bounding[3] < col:
+                        bounding[3] = col
         return labels
 
 
@@ -53,7 +58,8 @@ class Segmentation(object):
     # np.ndarray
     # the stroke image in format of np array
     def get_stroke(self,label):
-        l = self.get_bounding(label)
+        l = self.labels[label]
+
         stroke = np.copy(self.img[l[0]:l[1],l[2]:l[3]])
 
         for data in np.nditer(stroke, op_flags=['readwrite']):
@@ -111,15 +117,15 @@ class Segmentation(object):
         return l
 
 
-"""
-Samples
-# fname='./equations/SKMBT_36317040717260_eq6.png'
-# seg = Segmentation(fname)
-#
-# print seg.labels
-# for label in seg.labels.keys():
-#     stroke = seg.get_stroke(label)
-#     scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
-#
-# combined = seg.get_combined_strokes([1,2])
-# scipy.misc.imsave('./tmp/combined.png', combined)
+if __name__ == '__main__':
+    fname='./equations/SKMBT_36317040717260_eq6.png'
+    seg = Segmentation(fname)
+
+    print seg.labels
+    for label in seg.labels.keys():
+        print label
+        stroke = seg.get_stroke(label)
+        scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+
+    combined = seg.get_combined_strokes([1,2])
+    scipy.misc.imsave('./tmp/combined.png', combined)
