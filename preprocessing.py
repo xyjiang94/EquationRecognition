@@ -40,6 +40,8 @@ for e in files:
         counter+=1
         tmp = []
         symbol = h.group(1)
+        if symbol == 'frac' or symbol == 'bar':
+            symbol = '-'
         img = input_wrapper(join(imgFolderPath, e))
         tmp.append(img)
         tmp.append(symbol)
