@@ -42,6 +42,8 @@ for e in files:
         symbol = h.group(1)
         if symbol == 'frac' or symbol == 'bar':
             symbol = '-'
+        if symbol =='mul':
+            symbol = 'x'
         img = input_wrapper(join(imgFolderPath, e))
         tmp.append(img)
         tmp.append(symbol)
