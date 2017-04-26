@@ -19,19 +19,19 @@ for e in files:
         counter+=1
         tmp = []
         symbol = h.group(1)
-        y1 = h.group(2)
-        y2 = h.group(3)
-        x1 = h.group(4)
-        x2 = h.group(5)
+        # y1 = h.group(2)
+        # y2 = h.group(3)
+        # x1 = h.group(4)
+        # x2 = h.group(5)
         with open(join(imgFolderPath, e), 'r+b') as f:
             with Image.open(f) as img_opened:
                 img = np.array(img_opened)
                 tmp.append(img)
         tmp.append(symbol)
-        tmp.append(y1)
-        tmp.append(y2)
-        tmp.append(x1)
-        tmp.append(x2)
+        # tmp.append(y1)
+        # tmp.append(y2)
+        # tmp.append(x1)
+        # tmp.append(x2)
         sh[str(counter)] = tmp
         #print tmp
 sh.close()
