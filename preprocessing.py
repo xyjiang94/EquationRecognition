@@ -34,7 +34,7 @@ def input_wrapper(f):
 for e in files:
     h = re.match(".*eq\d*_(.*)_(\d*)_(\d*)_(\d*)_(\d*)\.png",e)
     if h is None:
-        print "boss"
+        print "equation"
     else:
         print "snippet"
         counter+=1
