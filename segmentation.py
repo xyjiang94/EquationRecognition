@@ -23,8 +23,13 @@ class Segmentation(object):
         self.img, self.count = ndimage.label(imgf > threshold)
         self.labels = self.calculate_labels()
 
+
+    # Return
+    # ----------
+    # labels : dictionary, key = label, value = list of bounding in order y1, y2, x1, x2
     def get_labels(self):
         return self.labels
+
 
     def calculate_labels(self):
         labels = {}
@@ -122,10 +127,10 @@ if __name__ == '__main__':
     seg = Segmentation(fname)
 
     print seg.labels
-    for label in seg.labels.keys():
-        print label
-        stroke = seg.get_stroke(label)
-        scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
-
-    combined = seg.get_combined_strokes([1,2])
-    scipy.misc.imsave('./tmp/combined.png', combined)
+    # for label in seg.labels.keys():
+    #     print label
+    #     stroke = seg.get_stroke(label)
+    #     scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+    #
+    # combined = seg.get_combined_strokes([1,2])
+    # scipy.misc.imsave('./tmp/combined.png', combined)
