@@ -7,7 +7,7 @@ from skimage.morphology import binary_dilation,dilation,disk
 from skimage.util import random_noise
 from scipy import misc
 from tensorflow.examples.tutorials.mnist import input_data
-from DataWrapper import MnistDigitsData
+from DataWrapperFinal import MnistDigitsData
 from subprocess import call
 from skimage.transform import resize,warp,AffineTransform
 from scipy import ndimage
@@ -118,7 +118,7 @@ class SymbolRecognition(object):
 			batch_x[j,:,:,0] = curr_patch
 		return batch_x,batch_y
 
-	def next_batch(self,dataset,size = 128,target_num = 10):
+	def next_batch(self,dataset,size = 128,target_num = 37):
 		for i in range(20000):
 			data = dataset.next_batch(size)
 			images = data[0]
@@ -153,7 +153,7 @@ class SymbolRecognition(object):
 		return tf.nn.avg_pool(x, ksize=[1, ks, ks, 1],
 								strides=[1, 1, 1, 1], padding='VALID')
 
-	def inference(self,target_num = 10):
+	def inference(self,target_num = 37):
 		extra_size = self.extra_size
 		if self.trainflag:
 			self.x = tf.placeholder(tf.float32,[None,32,32,1])
@@ -215,7 +215,7 @@ class SymbolRecognition(object):
 			self.W_conv1 = W_conv1
 		else:
 			self.readout = readout
-	def train(self, data, out_path = 'model_tt.ckpt',target_num = 10):
+	def train(self, data, out_path = 'model_tt.ckpt',target_num = 37):
 		#cross_entropy_mean = -tf.reduce_mean(self.y_ * tf.log(self.y_conv))
 		cross_entropy_mean = tf.reduce_mean(
 			tf.nn.softmax_cross_entropy_with_logits(labels=self.y_,logits=self.y_conv))
