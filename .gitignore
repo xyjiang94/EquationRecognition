@@ -4,3 +4,4 @@ tmp
 annotated/*
 .idea/*
 *.pyc
+*.png
