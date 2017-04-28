@@ -3,5 +3,6 @@ tmp
 *.db
 annotated/*
 .idea/*
+.idea
 *.pyc
 *.png
