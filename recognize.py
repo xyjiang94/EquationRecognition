@@ -11,7 +11,7 @@ symMap = {}
 with open('symbol_mapping.json', 'r') as opened:
     symMap = json.loads(opened.read())
 
-model_path = getcwd()
+model_path = getcwd() + sep + "model"
 imgFolderPath = getcwd() + sep + "annotated"
 files = [f for f in listdir(imgFolderPath) if isfile(
     join(imgFolderPath, f)) and imghdr.what(join(imgFolderPath, f)) == 'png']
