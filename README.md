@@ -9,6 +9,13 @@
 Recognize hand-written equations.
 
 ## Dependencies
+- tensorflow
+- scipy
+- skimage
+- shelve
+- imghdr
+- PIL
+- numpy
 
 ## Run Instructions
 
