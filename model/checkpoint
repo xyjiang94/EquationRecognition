@@ -1,2 +1,2 @@
-model_checkpoint_path: "/Users/zhengyjo/Desktop/EquationRecognition/model.ckpt"
-all_model_checkpoint_paths: "/Users/zhengyjo/Desktop/EquationRecognition/model.ckpt"
+model_checkpoint_path: "/Users/zhengyjo/Desktop/EquationRecognition/model/model.ckpt"
+all_model_checkpoint_paths: "/Users/zhengyjo/Desktop/EquationRecognition/model/model.ckpt"

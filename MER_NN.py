@@ -7,10 +7,11 @@ from skimage.morphology import binary_dilation,dilation,disk
 from skimage.util import random_noise
 from scipy import misc
 from tensorflow.examples.tutorials.mnist import input_data
-from DataWrapperFinal import MnistDigitsData
+from DataWrapperFinal import *
 from subprocess import call
 from skimage.transform import resize,warp,AffineTransform
 from scipy import ndimage
+from readDB import *
 
 def input_wrapper(f):
 	image = misc.imread(f)
@@ -101,36 +102,22 @@ class SymbolRecognition(object):
 									scale = (random_x_scale,random_y_scale))
 		return warp(image,trans_mat.inverse,output_shape=image.shape)
 	
-	def get_valid(self,dataset):
-		data = dataset.get_valid()
-		size = data[0].shape[0]
-		print('valid size',size)
-		target_num = data[1].shape[1]
-		print(data[0].shape)
-		images = data[0]
-		print(images.shape)
-		labels = data[1]
-		batch_x = np.zeros((size,32,32,1))
-		batch_y = np.zeros((size,target_num))
-		for j in range(size):
-			batch_y[j,:] = labels[j,:]
-			curr_patch = self.image_deformation(images[j,:,:])
-			batch_x[j,:,:,0] = curr_patch
-		return batch_x,batch_y
-
-	def next_batch(self,dataset,size = 128,target_num = 37):
-		for i in range(20000):
-			data = dataset.next_batch(size)
-			images = data[0]
-			labels = data[1]
-			batch_x = np.zeros((size,32,32,1))
-			batch_y = np.zeros((size,target_num))
-			for j in range(size):
-				batch_y[j,:] = labels[j,:]
-				curr_patch = self.image_deformation(images[j,:,:])
-				batch_x[j,:,:,0] = curr_patch
-				
-			yield batch_x,batch_y
+	# def get_valid(self,size = 1000):
+	# 	data = self.mnist.train.next_batch(size)
+	# 	images = np.zeros((size,32,32))
+	# 	labels = data[1]
+	# 	for i in range(1000):
+	# 		images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
+	# 	return images,labels
+	# def shuffle(self):
+	# 	pass
+	# def next_batch(self,batch_size):
+	# 	data = self.mnist.train.next_batch(batch_size)
+	# 	images = np.zeros((batch_size,32,32))
+	# 	labels = data[1]
+	# 	for i in range(batch_size):
+	# 		images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
+	# 	return images,labels
 
 	def weight_variable(self,shape):
 		initial = tf.truncated_normal(shape, stddev=0.01)
@@ -228,15 +215,23 @@ class SymbolRecognition(object):
 		sess = self.sess
 		sess.run(tf.global_variables_initializer())
 		#print(self.next_batch(256))
-		data = MnistDigitsData()
-		valid_x,valid_y = self.get_valid(data)
+		db = ReadDB()
+		x,y = db.generateLists()
+		data = MnistDigitsData(x,y)
+		# valid_x,valid_y = self.get_valid(data)
+		valid_x,valid_y = data.get_valid()
 
 		learn_rate = 2e-3
 		phist = .5
 		for epic in range(1):
-			i=0
 			data.shuffle()
-			for batch_x, batch_y in self.next_batch(data):			
+			for i in range(20000):
+				batch_x, batch_y = data.next_batch(50)
+			#for i in range(50):	
+				#batch_x = x[i]
+				#Reshape attention
+				#batch_x = np.reshape(batch_x,(-1,32,32,1))
+				#batch_y = y[i]		
 				if i%100 == 0:
 					train_accuracy,results,cem = sess.run([accuracy,self.y_res,cross_entropy_mean],
 						feed_dict={	self.x:valid_x/255.0, self.y_: valid_y, 
@@ -261,10 +256,10 @@ class SymbolRecognition(object):
 							learn_rate /= 2.
 					phist = train_accuracy
 				train_step.run(feed_dict={self.x: batch_x/255.0, self.y_: batch_y, self.keep_prob: 1., self.l_rate: learn_rate	})
-				i+=1
 		print valid_x.shape
 		for i in range(1000):
-			misc.imsave('valid'+str(i)+'_'+str(np.argmax(valid_y[i,:]))+'.png',valid_x[i,:,:,0])
+			#misc.imsave('valid'+str(i)+'_'+str(np.argmax(valid_y[i,:]))+'.png',valid_x[i,:,:,0])
+			misc.imsave('eq'+str(i)+'_'+str(np.argmax(valid_y[i,:]))+'.png',valid_x[i,:,:,0])
 		save_path = self.saver.save(sess, out_path)
   		print("Model saved in file: %s" % save_path)
 
