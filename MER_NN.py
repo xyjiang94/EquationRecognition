@@ -23,7 +23,7 @@ def input_wrapper(f):
 		image = np.pad(image,((0,0),(diff//2,diff//2)),'constant')
 	else:
 		image = np.pad(image,((diff//2,diff//2),(0,0)),'constant')
-	
+
 	image = dilation(image,disk(max(sx,sy)/32))
 	image = misc.imresize(image,(32,32))
 	if np.max(image) > 1:
@@ -44,7 +44,7 @@ class SymbolRecognition(object):
 		symbol_list = []
 		if model_path is not None:
 			self.saver.restore(sess,model_path)
-	
+
 	def batch_norm_layer(self,inputs, decay = 0.9):
 		is_training = self.trainflag
 		epsilon = 1e-3
@@ -80,7 +80,7 @@ class SymbolRecognition(object):
 		curr_patch[curr_patch > 1] = 1
 		curr_patch[curr_patch < 0] = 0
 		return curr_patch
-	
+
 	def image_deformation(self,image):
 		random_shear_angl = np.random.random() * np.pi/6 - np.pi/12
 		random_rot_angl = np.random.random() * np.pi/6 - np.pi/12 - random_shear_angl
@@ -100,7 +100,7 @@ class SymbolRecognition(object):
 									shear = random_shear_angl,
 									scale = (random_x_scale,random_y_scale))
 		return warp(image,trans_mat.inverse,output_shape=image.shape)
-	
+
 	def get_valid(self,dataset):
 		data = dataset.get_valid()
 		size = data[0].shape[0]
@@ -129,7 +129,7 @@ class SymbolRecognition(object):
 				batch_y[j,:] = labels[j,:]
 				curr_patch = self.image_deformation(images[j,:,:])
 				batch_x[j,:,:,0] = curr_patch
-				
+
 			yield batch_x,batch_y
 
 	def weight_variable(self,shape):
@@ -144,7 +144,7 @@ class SymbolRecognition(object):
 		return tf.Variable(initial)
 
 	def conv2d(self,x, W,padding = 'SAME',stride = 1):
-		return tf.nn.conv2d(x, W, strides=[1, stride, stride, 1], padding=padding)	
+		return tf.nn.conv2d(x, W, strides=[1, stride, stride, 1], padding=padding)
 
 	def max_pool_2x2(self,x,stride = 2):
 		return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
@@ -167,7 +167,7 @@ class SymbolRecognition(object):
 		tmp_1,_,_ = self.batch_norm_layer(self.conv2d(self.x, W_conv1,padding=padding))
 		h_conv1 = tf.nn.relu(tmp_1)
 
-		W_conv2 = self.weight_variable([3, 3, 8, 8])	
+		W_conv2 = self.weight_variable([3, 3, 8, 8])
 		tmp_2,_,_ = self.batch_norm_layer(self.conv2d(h_conv1, W_conv2,padding=padding))
 		h_conv2 = tf.nn.relu(tmp_2+self.x)
 
@@ -176,7 +176,7 @@ class SymbolRecognition(object):
 		tmp_skip2,_,_ = self.batch_norm_layer(self.conv2d(h_conv2, W_skip2,padding=padding,stride = 2))
 		h_skip2 = tf.nn.relu(tmp_skip2)
 
-		W_conv3 = self.weight_variable([3, 3, 8, 16])	
+		W_conv3 = self.weight_variable([3, 3, 8, 16])
 		tmp_3,_,_ = self.batch_norm_layer(self.conv2d(h_conv2, W_conv3,padding=padding,stride = 2))
 		h_conv3 = tf.nn.relu(tmp_3)
 
@@ -189,7 +189,7 @@ class SymbolRecognition(object):
 		tmp_skip4,_,_ = self.batch_norm_layer(self.conv2d(h_conv4, W_skip4,padding=padding,stride = 2))
 		h_skip4 = tf.nn.relu(tmp_skip4)
 
-		W_conv5 = self.weight_variable([3, 3, 16, 32])	
+		W_conv5 = self.weight_variable([3, 3, 16, 32])
 		tmp_5,_,_ = self.batch_norm_layer(self.conv2d(h_conv4, W_conv5,padding=padding,stride = 2))
 		h_conv5 = tf.nn.relu(tmp_5)
 
@@ -204,7 +204,7 @@ class SymbolRecognition(object):
 		h_fc1 = self.conv2d(h_pool6, W_fc1,padding=padding) + b_fc1
 		self.keep_prob = tf.placeholder(tf.float32)
 		W_readout = self.weight_variable([1,1,64, target_num])
-		b_readout = self.bias_variable([target_num])		
+		b_readout = self.bias_variable([target_num])
 		readout = self.conv2d(h_fc1, W_readout,padding = padding) + b_readout
 		self.h_fc1 = h_conv6
 		if self.trainflag:
@@ -236,10 +236,10 @@ class SymbolRecognition(object):
 		for epic in range(1):
 			i=0
 			data.shuffle()
-			for batch_x, batch_y in self.next_batch(data):			
+			for batch_x, batch_y in self.next_batch(data):
 				if i%100 == 0:
 					train_accuracy,results,cem = sess.run([accuracy,self.y_res,cross_entropy_mean],
-						feed_dict={	self.x:valid_x/255.0, self.y_: valid_y, 
+						feed_dict={	self.x:valid_x/255.0, self.y_: valid_y,
 									self.keep_prob: 1.0, self.l_rate: learn_rate})
 
 					hit = np.zeros(target_num)
@@ -269,8 +269,11 @@ class SymbolRecognition(object):
   		print("Model saved in file: %s" % save_path)
 
   	def p(self,image):
-  		res = self.sess.run(self.readout,feed_dict={self.x: np.reshape(image,(1,32,32,1))/1.0, self.keep_prob: 1.0})
-  		return np.argmax(res,axis=3).flatten()
+		# print self.pr(image)
+  		return np.argmax(self.pr(image),axis=3).flatten()
+
+	def pr(self,image):
+		return self.sess.run(self.readout,feed_dict={self.x: np.reshape(image,(1,32,32,1))/1.0, self.keep_prob: 1.0})
 
 if __name__ == '__main__':
 	from sys import argv
