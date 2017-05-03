@@ -101,57 +101,24 @@ class SymbolRecognition(object):
 									shear = random_shear_angl,
 									scale = (random_x_scale,random_y_scale))
 		return warp(image,trans_mat.inverse,output_shape=image.shape)
-<<<<<<< HEAD
-	
-	# def get_valid(self,size = 1000):
-	# 	data = self.mnist.train.next_batch(size)
-	# 	images = np.zeros((size,32,32))
-	# 	labels = data[1]
-	# 	for i in range(1000):
-	# 		images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
-	# 	return images,labels
-	# def shuffle(self):
-	# 	pass
-	# def next_batch(self,batch_size):
-	# 	data = self.mnist.train.next_batch(batch_size)
-	# 	images = np.zeros((batch_size,32,32))
-	# 	labels = data[1]
-	# 	for i in range(batch_size):
-	# 		images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
-	# 	return images,labels
-=======
 
-	def get_valid(self,dataset):
-		data = dataset.get_valid()
-		size = data[0].shape[0]
-		print('valid size',size)
-		target_num = data[1].shape[1]
-		print(data[0].shape)
-		images = data[0]
-		print(images.shape)
+	def get_valid(self,size = 1000):
+		data = self.mnist.train.next_batch(size)
+		images = np.zeros((size,32,32))
 		labels = data[1]
-		batch_x = np.zeros((size,32,32,1))
-		batch_y = np.zeros((size,target_num))
-		for j in range(size):
-			batch_y[j,:] = labels[j,:]
-			curr_patch = self.image_deformation(images[j,:,:])
-			batch_x[j,:,:,0] = curr_patch
-		return batch_x,batch_y
+		for i in range(1000):
+			images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
+		return images,labels
+	def shuffle(self):
+		pass
+	def next_batch(self,batch_size):
+		data = self.mnist.train.next_batch(batch_size)
+		images = np.zeros((batch_size,32,32))
+		labels = data[1]
+		for i in range(batch_size):
+			images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
+		return images,labels
 
-	def next_batch(self,dataset,size = 128,target_num = 37):
-		for i in range(20000):
-			data = dataset.next_batch(size)
-			images = data[0]
-			labels = data[1]
-			batch_x = np.zeros((size,32,32,1))
-			batch_y = np.zeros((size,target_num))
-			for j in range(size):
-				batch_y[j,:] = labels[j,:]
-				curr_patch = self.image_deformation(images[j,:,:])
-				batch_x[j,:,:,0] = curr_patch
-
-			yield batch_x,batch_y
->>>>>>> 5f690cf342d089d7b9e655002831bb8b5b26d021
 
 	def weight_variable(self,shape):
 		initial = tf.truncated_normal(shape, stddev=0.01)
@@ -262,11 +229,11 @@ class SymbolRecognition(object):
 <<<<<<< HEAD
 			for i in range(20000):
 				batch_x, batch_y = data.next_batch(50)
-			#for i in range(50):	
+			#for i in range(50):
 				#batch_x = x[i]
 				#Reshape attention
 				#batch_x = np.reshape(batch_x,(-1,32,32,1))
-				#batch_y = y[i]		
+				#batch_y = y[i]
 =======
 			for batch_x, batch_y in self.next_batch(data):
 >>>>>>> 5f690cf342d089d7b9e655002831bb8b5b26d021
