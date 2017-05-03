@@ -42,4 +42,8 @@ class ReadDB:
                 label[symDict[self.sh[str(i)][1]]] = 1
                 #print label
                 labelsList.append(label)
+<<<<<<< HEAD
         return imageList, labelsList
+=======
+        return imageList, labelsList
+>>>>>>> 5f690cf342d089d7b9e655002831bb8b5b26d021
