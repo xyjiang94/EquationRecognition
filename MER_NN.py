@@ -226,7 +226,6 @@ class SymbolRecognition(object):
 		phist = .5
 		for epic in range(1):
 			data.shuffle()
-<<<<<<< HEAD
 			for i in range(20000):
 				batch_x, batch_y = data.next_batch(50)
 			#for i in range(50):
@@ -234,9 +233,7 @@ class SymbolRecognition(object):
 				#Reshape attention
 				#batch_x = np.reshape(batch_x,(-1,32,32,1))
 				#batch_y = y[i]
-=======
-			for batch_x, batch_y in self.next_batch(data):
->>>>>>> 5f690cf342d089d7b9e655002831bb8b5b26d021
+
 				if i%100 == 0:
 					train_accuracy,results,cem = sess.run([accuracy,self.y_res,cross_entropy_mean],
 						feed_dict={	self.x:valid_x/255.0, self.y_: valid_y,
