@@ -8,13 +8,13 @@ class MnistDigitsData(object):
 		self.count =0
 		self.labelList = labelsList
 		self.imageList = imageList
-	def get_valid(self,size = 1000):
+	def get_valid(self,size = 500):
 		images = np.zeros((size,32,32))
 		labelsList = np.asarray(self.labelList)
 		#print "The labelList shape is"
 		#print labelsList.shape
 		labels = labelsList[0:size,:]
-		for i in range(1000):
+		for i in range(500):
 			images[i,:,:] = self.imageList[i]
 		self.count = self.count+size
 		images = np.reshape(images,(-1,32,32,1))
@@ -24,7 +24,7 @@ class MnistDigitsData(object):
 	def shuffleNum(self,batch_size):
 		#Get batch_size of non-repeated random number
 		wholeSize = len(self.labelList)
-		shuffleList = random.sample(range(1000, wholeSize), batch_size)
+		shuffleList = random.sample(range(500, wholeSize), batch_size)
 		#print shuffleList
 		#print type(shuffleList[1])
 		return shuffleList
@@ -36,7 +36,7 @@ class MnistDigitsData(object):
 		#print numList
 		#print type(numList[1])
 		labels = labelsList[self.count:batch_size+self.count,:]
-		print labels
+		#print labels
 		#labels = []
 		for i in range(batch_size):
 			k = numList[i]

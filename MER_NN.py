@@ -101,7 +101,7 @@ class SymbolRecognition(object):
 									shear = random_shear_angl,
 									scale = (random_x_scale,random_y_scale))
 		return warp(image,trans_mat.inverse,output_shape=image.shape)
-<<<<<<< HEAD
+
 
 	
 	# def get_valid(self,size = 1000):
@@ -121,14 +121,13 @@ class SymbolRecognition(object):
 	# 		images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
 	# 	return images,labels
 
-=======
->>>>>>> 59da10274ea25441e55dd5f974b5ba4c4d54b0f0
 
-	def get_valid(self,size = 1000):
+
+	def get_valid(self,size = 500):
 		data = self.mnist.train.next_batch(size)
 		images = np.zeros((size,32,32))
 		labels = data[1]
-		for i in range(1000):
+		for i in range(500):
 			images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
 		return images,labels
 	def shuffle(self):
@@ -141,11 +140,7 @@ class SymbolRecognition(object):
 			images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
 		return images,labels
 
-<<<<<<< HEAD
-			yield batch_x,batch_y
 
-=======
->>>>>>> 59da10274ea25441e55dd5f974b5ba4c4d54b0f0
 
 	def weight_variable(self,shape):
 		initial = tf.truncated_normal(shape, stddev=0.01)
@@ -178,47 +173,54 @@ class SymbolRecognition(object):
 			self.x = tf.placeholder(tf.float32,[1,None,None,1])
 			padding = 'SAME'
 
-		W_conv1 = self.weight_variable([3, 3, 1, 8])
+		#Change the output ([3, 3, 1, 8])
+		W_conv1 = self.weight_variable([3, 3, 1, 16])
 		tmp_1,_,_ = self.batch_norm_layer(self.conv2d(self.x, W_conv1,padding=padding))
 		h_conv1 = tf.nn.relu(tmp_1)
 
-		W_conv2 = self.weight_variable([3, 3, 8, 8])
+		#([3, 3, 8, 8])
+		W_conv2 = self.weight_variable([3, 3, 16, 16])
 		tmp_2,_,_ = self.batch_norm_layer(self.conv2d(h_conv1, W_conv2,padding=padding))
 		h_conv2 = tf.nn.relu(tmp_2+self.x)
 
-		#POOL
-		W_skip2 = self.weight_variable([3,3,8,16])
+		#POOL [3,3,8,16]
+		W_skip2 = self.weight_variable([3,3,16,32])
 		tmp_skip2,_,_ = self.batch_norm_layer(self.conv2d(h_conv2, W_skip2,padding=padding,stride = 2))
 		h_skip2 = tf.nn.relu(tmp_skip2)
 
-		W_conv3 = self.weight_variable([3, 3, 8, 16])
+		#[3, 3, 8, 16]
+		W_conv3 = self.weight_variable([3, 3, 16, 32])
 		tmp_3,_,_ = self.batch_norm_layer(self.conv2d(h_conv2, W_conv3,padding=padding,stride = 2))
 		h_conv3 = tf.nn.relu(tmp_3)
 
-		W_conv4 = self.weight_variable([3, 3, 16, 16])
+		#[3, 3, 32, 32]
+		W_conv4 = self.weight_variable([3, 3, 32, 32])
 		tmp_4,_,_ = self.batch_norm_layer(self.conv2d(h_conv3, W_conv4,padding=padding))
 		h_conv4 = tf.nn.relu(tmp_4+h_skip2)
 
-		#POOL
-		W_skip4 = self.weight_variable([1,1,16,32])
+		#POOL [1,1,16,32]
+		W_skip4 = self.weight_variable([1,1,32,64])
 		tmp_skip4,_,_ = self.batch_norm_layer(self.conv2d(h_conv4, W_skip4,padding=padding,stride = 2))
 		h_skip4 = tf.nn.relu(tmp_skip4)
 
-		W_conv5 = self.weight_variable([3, 3, 16, 32])
+		#[3, 3, 16, 32]
+		W_conv5 = self.weight_variable([3, 3, 32, 64])
 		tmp_5,_,_ = self.batch_norm_layer(self.conv2d(h_conv4, W_conv5,padding=padding,stride = 2))
 		h_conv5 = tf.nn.relu(tmp_5)
 
-		W_conv6 = self.weight_variable([3, 3, 32, 32])
+		#[3, 3, 32, 32]
+		W_conv6 = self.weight_variable([3, 3, 64, 64])
 		tmp_6,_,_ = self.batch_norm_layer(self.conv2d(h_conv5, W_conv6,padding=padding))
 		h_conv6 = tf.nn.relu(tmp_6+h_skip4)
 
 		h_pool6 = self.avg_pool_global(h_conv6,8)
 
-		W_fc1 = self.weight_variable([1,1,32,64])
-		b_fc1 = self.bias_variable([64])
+		#[1,1,32,64]
+		W_fc1 = self.weight_variable([1,1,64,256])
+		b_fc1 = self.bias_variable([256])#64
 		h_fc1 = self.conv2d(h_pool6, W_fc1,padding=padding) + b_fc1
 		self.keep_prob = tf.placeholder(tf.float32)
-		W_readout = self.weight_variable([1,1,64, target_num])
+		W_readout = self.weight_variable([1,1,256, target_num])
 		b_readout = self.bias_variable([target_num])
 		readout = self.conv2d(h_fc1, W_readout,padding = padding) + b_readout
 		self.h_fc1 = h_conv6
@@ -253,23 +255,20 @@ class SymbolRecognition(object):
 		phist = .5
 		for epic in range(1):
 			data.shuffle()
-<<<<<<< HEAD
 
-=======
->>>>>>> 59da10274ea25441e55dd5f974b5ba4c4d54b0f0
-			for i in range(20000):
-				batch_x, batch_y = data.next_batch(50)
+			for i in range(5000):
+				batch_x, batch_y = data.next_batch(100)
 			#for i in range(50):
 				#batch_x = x[i]
 				#Reshape attention
 				#batch_x = np.reshape(batch_x,(-1,32,32,1))
-<<<<<<< HEAD
+
 				#batch_y = y[i]		
 
 			#for batch_x, batch_y in self.next_batch(data):
-=======
+
 				#batch_y = y[i]
->>>>>>> 59da10274ea25441e55dd5f974b5ba4c4d54b0f0
+
 
 				if i%100 == 0:
 					train_accuracy,results,cem = sess.run([accuracy,self.y_res,cross_entropy_mean],
@@ -280,7 +279,7 @@ class SymbolRecognition(object):
 					hit = np.zeros(target_num)
 					precision = np.zeros(target_num)
 					recall = np.zeros(target_num)
-					for v_idx in range(1000):
+					for v_idx in range(500):
 						if valid_y[v_idx,results[v_idx]]:
 							hit[results[v_idx]] += 1.0
 						precision[results[v_idx]] += 1.0
@@ -299,7 +298,7 @@ class SymbolRecognition(object):
 				#train_step.run(feed_dict={self.x: batch_x/255.0, self.y_: batch_y, self.keep_prob: 1., self.l_rate: learn_rate	})
 				train_step.run(feed_dict={self.x: batch_x, self.y_: batch_y, self.keep_prob: 1., self.l_rate: learn_rate	})
 		print valid_x.shape
-		for i in range(1000):
+		for i in range(500):
 			#misc.imsave('valid'+str(i)+'_'+str(np.argmax(valid_y[i,:]))+'.png',valid_x[i,:,:,0])
 			misc.imsave('eq'+str(i)+'_'+str(np.argmax(valid_y[i,:]))+'.png',valid_x[i,:,:,0])
 		save_path = self.saver.save(sess, out_path)
