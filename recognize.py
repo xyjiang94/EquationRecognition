@@ -9,8 +9,6 @@ from scipy import misc
 import numpy as np
 from MER_NN import SymbolRecognition, input_wrapper
 
-np.set_printoptions(threshold='nan')
-
 symMap = {}
 with open('symbol_mapping.json', 'r') as opened:
     symMap = json.loads(opened.read())
@@ -39,7 +37,6 @@ with tf.Session() as sess:
         f = join(imgFolderPath, f)
         count += 1
         image = input_wrapper(f)
-        #print image
         # test = sr.pr(image)
         # print "test: ",test
         # print sess.run(tf.nn.softmax(test),dim=-1)
@@ -58,5 +55,5 @@ with tf.Session() as sess:
                         np.reshape(image, (32, 32)))
         fid += 1.
         if count >= 1000:
-             break
+            break
     print(acc, fid, acc / fid)

@@ -43,4 +43,3 @@ class ReadDB:
                 #print label
                 labelsList.append(label)
         return imageList, labelsList
-
