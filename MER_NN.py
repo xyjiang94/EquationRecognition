@@ -101,9 +101,11 @@ class SymbolRecognition(object):
 									shear = random_shear_angl,
 									scale = (random_x_scale,random_y_scale))
 		return warp(image,trans_mat.inverse,output_shape=image.shape)
+<<<<<<< HEAD
 
+=======
+>>>>>>> bf1ccf8f08d28d2a7162e6297c7c27e2df697c0e
 
-	
 	# def get_valid(self,size = 1000):
 	# 	data = self.mnist.train.next_batch(size)
 	# 	images = np.zeros((size,32,32))
@@ -256,12 +258,18 @@ class SymbolRecognition(object):
 		for epic in range(1):
 			data.shuffle()
 
+<<<<<<< HEAD
 			for i in range(5000):
 				batch_x, batch_y = data.next_batch(100)
+=======
+			for i in range(20000):
+				batch_x, batch_y = data.next_batch(50)
+>>>>>>> bf1ccf8f08d28d2a7162e6297c7c27e2df697c0e
 			#for i in range(50):
 				#batch_x = x[i]
 				#Reshape attention
 				#batch_x = np.reshape(batch_x,(-1,32,32,1))
+<<<<<<< HEAD
 
 				#batch_y = y[i]		
 
@@ -269,6 +277,9 @@ class SymbolRecognition(object):
 
 				#batch_y = y[i]
 
+=======
+
+>>>>>>> bf1ccf8f08d28d2a7162e6297c7c27e2df697c0e
 
 				if i%100 == 0:
 					train_accuracy,results,cem = sess.run([accuracy,self.y_res,cross_entropy_mean],
