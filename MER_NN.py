@@ -101,7 +101,7 @@ class SymbolRecognition(object):
 									shear = random_shear_angl,
 									scale = (random_x_scale,random_y_scale))
 		return warp(image,trans_mat.inverse,output_shape=image.shape)
-<<<<<<< HEAD
+
 	
 	# def get_valid(self,size = 1000):
 	# 	data = self.mnist.train.next_batch(size)
@@ -119,7 +119,7 @@ class SymbolRecognition(object):
 	# 	for i in range(batch_size):
 	# 		images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
 	# 	return images,labels
-=======
+
 
 	def get_valid(self,dataset):
 		data = dataset.get_valid()
@@ -151,7 +151,7 @@ class SymbolRecognition(object):
 				batch_x[j,:,:,0] = curr_patch
 
 			yield batch_x,batch_y
->>>>>>> 5f690cf342d089d7b9e655002831bb8b5b26d021
+
 
 	def weight_variable(self,shape):
 		initial = tf.truncated_normal(shape, stddev=0.01)
@@ -259,7 +259,7 @@ class SymbolRecognition(object):
 		phist = .5
 		for epic in range(1):
 			data.shuffle()
-<<<<<<< HEAD
+
 			for i in range(20000):
 				batch_x, batch_y = data.next_batch(50)
 			#for i in range(50):	
@@ -267,12 +267,13 @@ class SymbolRecognition(object):
 				#Reshape attention
 				#batch_x = np.reshape(batch_x,(-1,32,32,1))
 				#batch_y = y[i]		
-=======
-			for batch_x, batch_y in self.next_batch(data):
->>>>>>> 5f690cf342d089d7b9e655002831bb8b5b26d021
+
+			#for batch_x, batch_y in self.next_batch(data):
+
 				if i%100 == 0:
 					train_accuracy,results,cem = sess.run([accuracy,self.y_res,cross_entropy_mean],
-						feed_dict={	self.x:valid_x/255.0, self.y_: valid_y,
+						#If I don't divided by 255.0
+						feed_dict={	self.x:valid_x, self.y_: valid_y,
 									self.keep_prob: 1.0, self.l_rate: learn_rate})
 
 					hit = np.zeros(target_num)
@@ -293,7 +294,9 @@ class SymbolRecognition(object):
 						if learn_rate >= 1e-6:
 							learn_rate /= 2.
 					phist = train_accuracy
-				train_step.run(feed_dict={self.x: batch_x/255.0, self.y_: batch_y, self.keep_prob: 1., self.l_rate: learn_rate	})
+				#If I don't divide it by 255
+				#train_step.run(feed_dict={self.x: batch_x/255.0, self.y_: batch_y, self.keep_prob: 1., self.l_rate: learn_rate	})
+				train_step.run(feed_dict={self.x: batch_x, self.y_: batch_y, self.keep_prob: 1., self.l_rate: learn_rate	})
 		print valid_x.shape
 		for i in range(1000):
 			#misc.imsave('valid'+str(i)+'_'+str(np.argmax(valid_y[i,:]))+'.png',valid_x[i,:,:,0])

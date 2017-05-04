@@ -36,7 +36,7 @@ class MnistDigitsData(object):
 		#print numList
 		#print type(numList[1])
 		labels = labelsList[self.count:batch_size+self.count,:]
-		print labels
+		#print labels
 		#labels = []
 		for i in range(batch_size):
 			k = numList[i]
