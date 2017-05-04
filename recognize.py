@@ -37,11 +37,14 @@ with tf.Session() as sess:
         f = join(imgFolderPath, f)
         count += 1
         image = input_wrapper(f)
-        # test = sr.pr(image)
-        # print "test: ",test
-        # print sess.run(tf.nn.softmax(test),dim=-1)
+        test = sr.pr(image)
+
         p = sr.p(image)
-        print "predict: ",p
+        # print "predict: ",p
+        #
+        # print "test: ",test
+        probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+        print probability,type(probability)
         p = symMap[str(p[0])]
         print the_file
 
@@ -54,6 +57,6 @@ with tf.Session() as sess:
             misc.imsave('err/' + str(p) + '_' + res + ".png",
                         np.reshape(image, (32, 32)))
         fid += 1.
-        if count >= 1000:
+        if count >= 10:
             break
     print(acc, fid, acc / fid)
