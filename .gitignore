@@ -6,4 +6,4 @@ annotated/*
 .idea
 *.pyc
 *.png
-.DS_Store
+*.DS_Store
