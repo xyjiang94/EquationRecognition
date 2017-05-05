@@ -162,7 +162,7 @@ class SymbolRecognition(object):
 		return tf.nn.avg_pool(x, ksize=[1, ks, ks, 1],
 								strides=[1, 1, 1, 1], padding='VALID')
 
-	def inference(self,target_num = 37):
+	def inference(self,target_num = 38):
 		extra_size = self.extra_size
 		if self.trainflag:
 			self.x = tf.placeholder(tf.float32,[None,32,32,1])
@@ -172,54 +172,54 @@ class SymbolRecognition(object):
 			self.x = tf.placeholder(tf.float32,[1,None,None,1])
 			padding = 'SAME'
 
-		#Change the output ([3, 3, 1, 8])
-		W_conv1 = self.weight_variable([3, 3, 1, 16])
+		#Change the output ([3, 3, 1, 16])
+		W_conv1 = self.weight_variable([3, 3, 1, 32])
 		tmp_1,_,_ = self.batch_norm_layer(self.conv2d(self.x, W_conv1,padding=padding))
 		h_conv1 = tf.nn.relu(tmp_1)
 
-		#([3, 3, 8, 8])
-		W_conv2 = self.weight_variable([3, 3, 16, 16])
+		#([3, 3, 16, 16])
+		W_conv2 = self.weight_variable([3, 3, 32, 32])
 		tmp_2,_,_ = self.batch_norm_layer(self.conv2d(h_conv1, W_conv2,padding=padding))
 		h_conv2 = tf.nn.relu(tmp_2+self.x)
 
-		#POOL [3,3,8,16]
-		W_skip2 = self.weight_variable([3,3,16,32])
+		#POOL [3,3,16,32]
+		W_skip2 = self.weight_variable([3,3,32,64])
 		tmp_skip2,_,_ = self.batch_norm_layer(self.conv2d(h_conv2, W_skip2,padding=padding,stride = 2))
 		h_skip2 = tf.nn.relu(tmp_skip2)
 
-		#[3, 3, 8, 16]
-		W_conv3 = self.weight_variable([3, 3, 16, 32])
+		#[3, 3, 16, 32]
+		W_conv3 = self.weight_variable([3, 3, 32, 64])
 		tmp_3,_,_ = self.batch_norm_layer(self.conv2d(h_conv2, W_conv3,padding=padding,stride = 2))
 		h_conv3 = tf.nn.relu(tmp_3)
 
 		#[3, 3, 32, 32]
-		W_conv4 = self.weight_variable([3, 3, 32, 32])
+		W_conv4 = self.weight_variable([3, 3, 64, 64])
 		tmp_4,_,_ = self.batch_norm_layer(self.conv2d(h_conv3, W_conv4,padding=padding))
 		h_conv4 = tf.nn.relu(tmp_4+h_skip2)
 
-		#POOL [1,1,16,32]
-		W_skip4 = self.weight_variable([1,1,32,64])
+		#POOL [1,1,32,64]
+		W_skip4 = self.weight_variable([1,1,64,128])
 		tmp_skip4,_,_ = self.batch_norm_layer(self.conv2d(h_conv4, W_skip4,padding=padding,stride = 2))
 		h_skip4 = tf.nn.relu(tmp_skip4)
 
-		#[3, 3, 16, 32]
-		W_conv5 = self.weight_variable([3, 3, 32, 64])
+		#[3, 3, 32, 64]
+		W_conv5 = self.weight_variable([3, 3, 64, 128])
 		tmp_5,_,_ = self.batch_norm_layer(self.conv2d(h_conv4, W_conv5,padding=padding,stride = 2))
 		h_conv5 = tf.nn.relu(tmp_5)
 
-		#[3, 3, 32, 32]
-		W_conv6 = self.weight_variable([3, 3, 64, 64])
+		#[3, 3, 64, 64]
+		W_conv6 = self.weight_variable([3, 3, 128, 128])
 		tmp_6,_,_ = self.batch_norm_layer(self.conv2d(h_conv5, W_conv6,padding=padding))
 		h_conv6 = tf.nn.relu(tmp_6+h_skip4)
 
 		h_pool6 = self.avg_pool_global(h_conv6,8)
 
-		#[1,1,32,64]
-		W_fc1 = self.weight_variable([1,1,64,256])
-		b_fc1 = self.bias_variable([256])#64
+		#[1,1,64,256]
+		W_fc1 = self.weight_variable([1,1,128,1024])
+		b_fc1 = self.bias_variable([1024])#256
 		h_fc1 = self.conv2d(h_pool6, W_fc1,padding=padding) + b_fc1
 		self.keep_prob = tf.placeholder(tf.float32)
-		W_readout = self.weight_variable([1,1,256, target_num])
+		W_readout = self.weight_variable([1,1,1024, target_num])#256
 		b_readout = self.bias_variable([target_num])
 		readout = self.conv2d(h_fc1, W_readout,padding = padding) + b_readout
 		self.h_fc1 = h_conv6
@@ -231,7 +231,7 @@ class SymbolRecognition(object):
 			self.W_conv1 = W_conv1
 		else:
 			self.readout = readout
-	def train(self, data, out_path = 'model_tt.ckpt',target_num = 37):
+	def train(self, data, out_path = 'model.ckpt',target_num = 38):
 		#cross_entropy_mean = -tf.reduce_mean(self.y_ * tf.log(self.y_conv))
 		cross_entropy_mean = tf.reduce_mean(
 			tf.nn.softmax_cross_entropy_with_logits(labels=self.y_,logits=self.y_conv))
@@ -307,7 +307,8 @@ if __name__ == '__main__':
 	if argv[1] == 'train':
 		with tf.Session() as sess:
 			sr = SymbolRecognition(sess)
-			sr.train(argv[3],argv[2])
+			#sr.train(argv[3],argv[2])
+			sr.train(argv[2])
 	else:
 		with tf.Session() as sess:
 			print 'model_path,',argv[2]

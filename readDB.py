@@ -1,5 +1,6 @@
 import shelve
 import numpy as np
+import json
 class ReadDB:
     def __init__(self):
         self.sh = shelve.open("training",writeback=False)
@@ -21,20 +22,21 @@ class ReadDB:
     def generateLists(self):
         symDict = {}
         count = 0
-        for i in range(1,3483):
-            if (self.sh[str(i)][1] not in symDict.keys()) and (self.isTriAlphabet(i)==1):
+        for i in range(1,3492):
+            #and (self.isTriAlphabet(self.sh[str(i)][1])==1
+            if (self.sh[str(i)][1] not in symDict.keys()):
                 symDict[self.sh[str(i)][1]] = count
                 count = count + 1
 
 
 
 
-        # 37 Symbols, not including s,i,n,c,o,t
+        # 38 Symbols
         print len(symDict.keys())
 
         imageList =[]
         labelsList = []
-        for i in range(1,3483):
+        for i in range(1,3492):
             if (self.sh[str(i)][1] in symDict.keys()):
                 imageList.append(self.sh[str(i)][0])
                 #print sh[str(i)][0]
