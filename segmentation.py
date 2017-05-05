@@ -67,11 +67,18 @@ class Segmentation(object):
 
         stroke = np.copy(self.img[l[0]:l[1],l[2]:l[3]])
 
+        """
+        following is binary stroke
+        """
         # for data in np.nditer(stroke, op_flags=['readwrite']):
         #     if data != label:
         #         data[...] = 0
         #     else:
-        #         data[...] = 225
+        #         data[...] = 255
+
+        """
+        following is the stroke from origin image
+        """
         shape = stroke.shape
         for i in range(shape[0]):
             for j in range(shape[1]):
@@ -96,12 +103,18 @@ class Segmentation(object):
         bounding = self.get_combined_bounding(l_labels)
         stroke = np.copy(self.img[bounding[0]:bounding[1],bounding[2]:bounding[3]])
 
+        """
+        following is binary stroke
+        """
         # for data in np.nditer(stroke, op_flags=['readwrite']):
         #     if data in l_labels:
-        #         data[...] = 225
+        #         data[...] = 255
         #     else:
         #         data[...] = 0
 
+        """
+        following is the stroke from origin image
+        """
         shape = stroke.shape
         for i in range(shape[0]):
             for j in range(shape[1]):
