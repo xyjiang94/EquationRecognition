@@ -259,22 +259,31 @@ class SymbolRecognition(object):
 			for i in range(5000):
 				batch_x, batch_y = data.next_batch(100)
 
+<<<<<<< HEAD
 			# for i in range(20000):
 			# 	batch_x, batch_y = data.next_batch(50)
 
+=======
+>>>>>>> 6a8d66e2f86c70690ab46a57730be4b9cfc9731a
 			#for i in range(50):
 				#batch_x = x[i]
 				#Reshape attention
 				#batch_x = np.reshape(batch_x,(-1,32,32,1))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6a8d66e2f86c70690ab46a57730be4b9cfc9731a
 
-				#batch_y = y[i]		
+				#batch_y = y[i]
 
 			#for batch_x, batch_y in self.next_batch(data):
 
 				#batch_y = y[i]
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6a8d66e2f86c70690ab46a57730be4b9cfc9731a
 
 				if i%100 == 0:
 					train_accuracy,results,cem = sess.run([accuracy,self.y_res,cross_entropy_mean],
