@@ -69,23 +69,23 @@ class Partition(object):
                     generated.append(v)
                     if p=="-":
                         print p,bb
-                        if len(self.lst)>1:
-                            if self.lst[-2][0]=="-":
-                                if abs(bb[2]-self.lst[-2][3])<15 and abs(bb[3]-self.lst[-2][4])<15:
-                                    l = [generated[-2],v]
-                                    bb = self.seg.get_combined_bounding(l)
-                                    w = self.lst[-2][-1]
-                                    self.lst.pop()
-                                    self.lst.pop()
-                                    self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],[w,v]])
-                            else:
-                                x = (self.lst[-2][3]+self.lst[-2][4])/2
-                                y = (self.lst[-2][1]+self.lst[-2][2])/2
-                                if x>bb[2] and x<bb[3]:
-                                    if y<(bb[1]+bb[0])/2:
-                                        self.lst[-1][0] = "bar"
-                                    else:
-                                        self.lst[-1][0] = "frac"
+                        # if len(self.lst)>1:
+                        #     if self.lst[-2][0]=="-":
+                        #         if abs(bb[2]-self.lst[-2][3])<15 and abs(bb[3]-self.lst[-2][4])<15:
+                        #             l = [generated[-2],v]
+                        #             bb = self.seg.get_combined_bounding(l)
+                        #             w = self.lst[-2][-1]
+                        #             self.lst.pop()
+                        #             self.lst.pop()
+                        #             self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],[w,v]])
+                        #     else:
+                        #         x = (self.lst[-2][3]+self.lst[-2][4])/2
+                        #         y = (self.lst[-2][1]+self.lst[-2][2])/2
+                        #         if x>bb[2] and x<bb[3]:
+                        #             if y<(bb[1]+bb[0])/2:
+                        #                 self.lst[-1][0] = "bar"
+                        #             else:
+                        #                 self.lst[-1][0] = "frac"
                     elif p=="dot":
                         print "dot case"
                         self.lst.pop()
@@ -117,15 +117,14 @@ class Partition(object):
                             if probability>0.5:
                                 self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
                                 dots = []
-                    elif len(self.lst)>1 and self.lst[-2][0]=="-":
-                        x = (bb[2]+bb[3])/2
-                        y = (bb[0]+bb[1])/2
-                        if x>self.lst[-2][3] and x<self.lst[-2][4]:
-                            if y>(self.lst[-2][1]+self.lst[-2][2])/2:
-                                self.lst[-2][0] = "frac"
+                    # elif len(self.lst)>1 and self.lst[-2][0]=="-":
+                    #     x = (bb[2]+bb[3])/2
+                    #     y = (bb[0]+bb[1])/2
+                    #     if x>self.lst[-2][3] and x<self.lst[-2][4]:
+                    #         if y>(self.lst[-2][1]+self.lst[-2][2])/2:
+                    #             self.lst[-2][0] = "frac"
                     elif p=="x" and len(self.lst)>1 and self.lst[-2][0] in ["a","b","c","d","frac"]:
                         self.lst[-1][0]="mul"
-
 
                 for w in self.mst[v]:
                     if w[0] in visited:
@@ -156,6 +155,61 @@ class Partition(object):
                 if probability>0.5 :
                     self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
         self.lst.sort(key = lambda x : x[3])
+        print self.lst
+        centerList = []
+        minusList = []
+        deleteList = []
+        idx = 0
+        for e in self.lst:
+            centerList.append([(e[1]+e[2])/2,(e[3]+e[4])/2])
+            if e[0]=="-":
+                minusList.append(idx)
+            idx+=1
+        for i in minusList:
+            if i in deleteList:
+                continue
+            up = 0
+            down = 0
+            k=i-1
+            flag = ""
+            while centerList[k][1]<self.lst[i][4] and centerList[k][1]>self.lst[i][3]:
+                if k in minusList:
+                    l = self.lst[i][-1]+self.lst[k][-1]
+                    bb = self.seg.get_combined_bounding(l)
+                    deleteList.append(i)
+                    deleteList.append(k)
+                    self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],l])
+                    flag = "="
+                if centerList[k][0]<centerList[i][0]:
+                    up+=1
+                else:
+                    down+=1
+                k-=1
+            k=i+1
+            while centerList[k][1]<self.lst[i][4] and centerList[k][1]>self.lst[i][3]:
+                if k in minusList:
+                    l = self.lst[i][-1]+self.lst[k][-1]
+                    bb = self.seg.get_combined_bounding(l)
+                    deleteList.append(i)
+                    deleteList.append(k)
+                    self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],l])
+                    flag = "="
+                if centerList[k][0]<centerList[i][0]:
+                    up+=1
+                else:
+                    down+=1
+                k+=1
+            if flag == "=":
+                continue
+            else:
+                if up>0:
+                    self.lst[i][0] = "frac"
+                elif down>0:
+                    self.lst[i][0] = "bar"
+        for e in deleteList:
+            del self.lst[e]
+
+
 
 
     def input_wrapper_arr(self,image):
