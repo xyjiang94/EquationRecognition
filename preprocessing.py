@@ -15,6 +15,7 @@ counter = 0
 
 def input_wrapper(f):
 	image = misc.imread(f)
+	image[image>50]=255
 	sx,sy = image.shape
 	diff = np.abs(sx-sy)
 

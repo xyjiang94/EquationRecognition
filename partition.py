@@ -68,6 +68,7 @@ class Partition(object):
                     self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
                     generated.append(v)
                     if p=="-":
+                        print p,bb
                         if len(self.lst)>1:
                             if self.lst[-2][0]=="-":
                                 if abs(bb[2]-self.lst[-2][3])<15 and abs(bb[3]-self.lst[-2][4])<15:
@@ -154,6 +155,7 @@ class Partition(object):
                 print probability,conn,p
                 if probability>0.5 :
                     self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
+        self.lst.sort(key = lamda x : x[3])
 
 
     def input_wrapper_arr(self,image):
