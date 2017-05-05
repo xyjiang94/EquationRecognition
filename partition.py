@@ -56,8 +56,8 @@ class Partition(object):
             while len(queue)>0:
                 v = queue.popleft()
                 visited.add(v)
-                image = seg.get_combined_strokes([v])
-                bb = seg.get_combined_bounding([v])
+                image = self.seg.get_combined_strokes([v])
+                bb = self.seg.get_combined_bounding([v])
                 image = self.input_wrapper_arr(image)
                 test = sr.pr(image)
                 p = sr.p(image)
@@ -72,7 +72,7 @@ class Partition(object):
                             if self.lst[-2][0]=="-":
                                 if abs(bb[2]-self.lst[-2][3])<15 and abs(bb[3]-self.lst[-2][4])<15:
                                     l = [generated[-2],v]
-                                    bb = seg.get_combined_bounding(l)
+                                    bb = self.seg.get_combined_bounding(l)
                                     w = self.lst[-2][-1]
                                     self.lst.pop()
                                     self.lst.pop()
@@ -87,8 +87,8 @@ class Partition(object):
                         dots.append(v)
                         if len(dots)>1 and len(self.lst)>0 and self.lst[-1][0]=="-":
                             l = [dots[-2],self.lst[-1][-1][0],v]
-                            image = seg.get_combined_strokes(l)
-                            bb = seg.get_combined_bounding(l)
+                            image = self.seg.get_combined_strokes(l)
+                            bb = self.seg.get_combined_bounding(l)
                             image = self.input_wrapper_arr(image)
                             test = sr.pr(image)
                             p = sr.p(image)
@@ -101,8 +101,8 @@ class Partition(object):
                                 dots.pop()
                                 dots.pop()
                         elif len(dots) == 3:
-                            image = seg.get_combined_strokes(dots)
-                            bb = seg.get_combined_bounding(dots)
+                            image = self.seg.get_combined_strokes(dots)
+                            bb = self.seg.get_combined_bounding(dots)
                             image = self.input_wrapper_arr(image)
                             test = sr.pr(image)
                             p = sr.p(image)
@@ -138,8 +138,8 @@ class Partition(object):
                         if w[0] in generated:
                             continue
                         queue.append(w[0])
-                image = seg.get_combined_strokes(conn)
-                bb = seg.get_combined_bounding(conn)
+                image = self.seg.get_combined_strokes(conn)
+                bb = self.seg.get_combined_bounding(conn)
                 image = self.input_wrapper_arr(image)
                 test = sr.pr(image)
                 p = sr.p(image)
@@ -165,16 +165,18 @@ class Partition(object):
             image = image/255.
         return image
 
-fname='./equations/SKMBT_36317040717260_eq23.png'
-seg = Segmentation(fname)
-d = seg.get_labels()
-mst = MinimumSpanningTree(d).get_mst()
-print mst
-pa = Partition(mst,seg)
-print pa.getList()
-pa.calculateCount()
-print pa.getCount()
-for label in seg.labels.keys():
-    print label
-    stroke = seg.get_stroke(label)
-    scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+if __name__ == '__main__':
+
+    fname='./equations/SKMBT_36317040717260_eq23.png'
+    seg = Segmentation(fname)
+    d = seg.get_labels()
+    mst = MinimumSpanningTree(d).get_mst()
+    print mst
+    pa = Partition(mst,seg)
+    print pa.getList()
+    pa.calculateCount()
+    print pa.getCount()
+    for label in seg.labels.keys():
+        print label
+        stroke = seg.get_stroke(label)
+        scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
