@@ -70,22 +70,22 @@ class Segmentation(object):
         """
         following is binary stroke
         """
-        # for data in np.nditer(stroke, op_flags=['readwrite']):
-        #     if data != label:
-        #         data[...] = 0
-        #     else:
-        #         data[...] = 255
+        for data in np.nditer(stroke, op_flags=['readwrite']):
+            if data != label:
+                data[...] = 0
+            else:
+                data[...] = 255
 
         """
         following is the stroke from origin image
         """
-        shape = stroke.shape
-        for i in range(shape[0]):
-            for j in range(shape[1]):
-                if stroke[i][j] != label:
-                    stroke[i][j] = 0
-                else:
-                    stroke[i][j] = self.origin[i+l[0]][j+l[2]]
+        # shape = stroke.shape
+        # for i in range(shape[0]):
+        #     for j in range(shape[1]):
+        #         if stroke[i][j] != label:
+        #             stroke[i][j] = 0
+        #         else:
+        #             stroke[i][j] = self.origin[i+l[0]][j+l[2]]
 
         return stroke
 
@@ -106,22 +106,22 @@ class Segmentation(object):
         """
         following is binary stroke
         """
-        # for data in np.nditer(stroke, op_flags=['readwrite']):
-        #     if data in l_labels:
-        #         data[...] = 255
-        #     else:
-        #         data[...] = 0
+        for data in np.nditer(stroke, op_flags=['readwrite']):
+            if data in l_labels:
+                data[...] = 255
+            else:
+                data[...] = 0
 
         """
         following is the stroke from origin image
         """
-        shape = stroke.shape
-        for i in range(shape[0]):
-            for j in range(shape[1]):
-                if stroke[i][j] in l_labels:
-                    stroke[i][j] = self.origin[i+bounding[0]][j+bounding[2]]
-                else:
-                    stroke[i][j] = 0
+        # shape = stroke.shape
+        # for i in range(shape[0]):
+        #     for j in range(shape[1]):
+        #         if stroke[i][j] in l_labels:
+        #             stroke[i][j] = self.origin[i+bounding[0]][j+bounding[2]]
+        #         else:
+        #             stroke[i][j] = 0
 
         return stroke
 
@@ -159,12 +159,12 @@ if __name__ == '__main__':
         print label
         stroke = seg.get_stroke(label)
         scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
-<<<<<<< HEAD
+
     #
     # combined = seg.get_combined_strokes([1,2])
     # scipy.misc.imsave('./tmp/combined.png', combined)
-=======
 
-    combined = seg.get_combined_strokes([1,2])
-    scipy.misc.imsave('./tmp/combined.png', combined)
->>>>>>> 2ecd9fa005ac741f1db33127568a8c9a4d073ba9
+
+    # combined = seg.get_combined_strokes([1,2])
+    # scipy.misc.imsave('./tmp/combined.png', combined)
+

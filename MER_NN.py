@@ -256,7 +256,7 @@ class SymbolRecognition(object):
 			data.shuffle()
 
 
-			for i in range(1):
+			for i in range(5000):
 				batch_x, batch_y = data.next_batch(100)
 
 				if i%100 == 0:
