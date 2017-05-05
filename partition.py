@@ -64,7 +64,7 @@ class Partition(object):
                 probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                 p = symMap[str(p[0])]
                 print probability,p
-                if probability>0.5 :
+                if probability>0. :
                     self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
                     generated.append(v)
                     if p=="-":
@@ -100,7 +100,7 @@ class Partition(object):
                             probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                             p = symMap[str(p[0])]
                             print probability,l,p
-                            if probability>0.5:
+                            if probability>0.:
                                 self.lst.pop()
                                 self.lst.append(["div",bb[0],bb[1],bb[2],bb[3],l])
                                 dots.pop()
@@ -114,7 +114,7 @@ class Partition(object):
                             probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                             p = symMap[str(p[0])]
                             print probability,dots,p
-                            if probability>0.5:
+                            if probability>0.:
                                 self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
                                 dots = []
                     # elif len(self.lst)>1 and self.lst[-2][0]=="-":
@@ -152,7 +152,7 @@ class Partition(object):
                 probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                 p = symMap[str(p[0])]
                 print probability,conn,p
-                if probability>0.5 :
+                if probability>0. :
                     self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
         self.lst.sort(key = lambda x : x[3])
         print self.lst
