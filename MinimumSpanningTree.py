@@ -1,6 +1,6 @@
 import math
 from segmentation import *
-import queue
+from Queue import *
 
 class MinimumSpanningTree(object):
     # Parameters
@@ -98,7 +98,7 @@ class MinimumSpanningTree(object):
     # boolean : True if v2 is among all the vertex that is reachable for v1
     def search(self, v1, v2):
         l_visited = []
-        q = queue.Queue()
+        q = Queue()
         q.put(v1)
         while q.qsize() > 0:
             cur_v = q.get()
@@ -120,11 +120,12 @@ class MinimumSpanningTree(object):
             d[key].append(t)
 
 if __name__ == '__main__':
-    fname = './equations/SKMBT_36317040717260_eq6.png'
-    seg = Segmentation(fname)
-    d = BaseExceptionseg.get_labels()
     # d = {1: [21, 150, 434, 533], 2: [26, 79, 683, 775], 3: [43, 66, 489, 523], 4: [47, 74, 735, 779], 5: [76, 86, 479, 535],
     #      6: [84, 91, 600, 625], 7: [88, 99, 678, 788], 8: [96, 104, 596, 618], 9: [98, 136, 495, 523],
     #      10: [117, 166, 683, 778], 11: [135, 171, 739, 769]}
+
+    fname = './equations/SKMBT_36317040717260_eq6.png'
+    seg = Segmentation(fname)
+    d = seg.get_labels()
     mst = MinimumSpanningTree(d)
     print mst.get_mst()
