@@ -19,7 +19,7 @@ from scipy import misc
 import numpy as np
 from MER_NN import SymbolRecognition
 from skimage.morphology import binary_dilation,dilation,disk
-
+import scipy
 
 symMap = {}
 with open('symbol_mapping.json', 'r') as opened:
@@ -64,7 +64,7 @@ class Partition(object):
                 probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                 p = symMap[str(p[0])]
                 print probability,p
-                if probability>0.8 :
+                if probability>0.5 :
                     self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
                     generated.append(v)
                     if p=="-":
@@ -174,3 +174,7 @@ pa = Partition(mst,seg)
 print pa.getList()
 pa.calculateCount()
 print pa.getCount()
+for label in seg.labels.keys():
+    print label
+    stroke = seg.get_stroke(label)
+    scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
