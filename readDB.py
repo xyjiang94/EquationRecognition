@@ -29,7 +29,7 @@ class ReadDB:
 
 
 
-        # 31 Symbols, not including s,i,n,c,o,t
+        # 37 Symbols, not including s,i,n,c,o,t
         print len(symDict.keys())
 
         imageList =[]
