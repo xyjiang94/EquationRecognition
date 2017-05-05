@@ -4,7 +4,7 @@
 # dictionary :  key = vertex, value = a list of tuples (tuple: [connected vertex, weight])
 # output lst
 # ----------
-# list :  tuple of format (symbol, x1, y1, x2, y2)
+# lists :  list of format [symbol, x1, y1, x2, y2]
 from segmentation import Segmentation
 from MinimumSpanningTree import MinimumSpanningTree
 from collections import deque
@@ -17,7 +17,7 @@ import json
 import tensorflow as tf
 from scipy import misc
 import numpy as np
-from MER_NN import SymbolRecognition, input_wrapper
+from MER_NN import SymbolRecognition
 from skimage.morphology import binary_dilation,dilation,disk
 
 
@@ -56,8 +56,25 @@ class Partition(object):
                 print probability,type(probability)
                 p = symMap[str(p[0])]
                 if probability>0.8 :
-                    self.lst.append((p,bb[0],bb[1],bb[2],bb[3]))
+                    self.lst.append([p,bb[0],bb[1],bb[2],bb[3]])
                     generated.append(v)
+                    if p=="-":
+                        if len(self.lst)>1:
+                            if self.lst[-2][0]=="-":
+                                if abs(bb[2]-self.lst[-2][3])<10 and abs(bb[3]-self.lst[-2][4])<10:
+                                    l = [generated[-2],v]
+                                    bb = seg.get_combined_bounding(l)
+                                    self.lst.pop()
+                                    self.lst.pop()
+                                    self.lst.append(["=",bb[0],bb[1],bb[2],bb[3]])
+                            else:
+                                x = (self.lst[-2][3]+self.lst[-2][4])/2
+                                if x>bb[2] and x<bb[3]:
+                                    self.lst[-1][0] = "frac"
+                    elif len(self.lst)>1 and self.lst[-2][0]=="-":
+                        x = (bb[2]+bb[3])/2
+                        if x>self.lst[-2][3] and x<self.lst[-2][4]:
+                            self.lst[-2][0] = "frac"
 
                 for w in self.mst[v]:
                     if w[0] in visited:
