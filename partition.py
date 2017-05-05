@@ -79,8 +79,12 @@ class Partition(object):
                                     self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],[w,v]])
                             else:
                                 x = (self.lst[-2][3]+self.lst[-2][4])/2
+                                y = (self.lst[-2][1]+self.lst[-2][2])/2
                                 if x>bb[2] and x<bb[3]:
-                                    self.lst[-1][0] = "frac"
+                                    if y<(bb[1]+bb[0])/2:
+                                        self.lst[-1][0] = "bar"
+                                    else:
+                                        self.lst[-1][0] = "frac"
                     elif p=="dot":
                         print "dot case"
                         self.lst.pop()
@@ -114,8 +118,10 @@ class Partition(object):
                                 dots = []
                     elif len(self.lst)>1 and self.lst[-2][0]=="-":
                         x = (bb[2]+bb[3])/2
+                        y = (bb[0]+bb[1])/2
                         if x>self.lst[-2][3] and x<self.lst[-2][4]:
-                            self.lst[-2][0] = "frac"
+                            if y>(self.lst[-2][1]+self.lst[-2][2])/2:
+                                self.lst[-2][0] = "frac"
                     elif p=="x" and len(self.lst)>1 and self.lst[-2][0] in ["a","b","c","d","frac"]:
                         self.lst[-1][0]="mul"
 
@@ -165,7 +171,7 @@ class Partition(object):
             image = image/255.
         return image
 
-fname='./equations/SKMBT_36317040717260_eq23.png'
+fname='./equations/SKMBT_36317040717260_eq22.png'
 seg = Segmentation(fname)
 d = seg.get_labels()
 mst = MinimumSpanningTree(d).get_mst()
