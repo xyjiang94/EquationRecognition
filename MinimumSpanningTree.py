@@ -1,6 +1,8 @@
 import math
 from segmentation import *
-from Queue import *
+
+
+import Queue
 
 class MinimumSpanningTree(object):
     # Parameters
@@ -98,7 +100,7 @@ class MinimumSpanningTree(object):
     # boolean : True if v2 is among all the vertex that is reachable for v1
     def search(self, v1, v2):
         l_visited = []
-        q = Queue()
+        q = Queue.Queue()
         q.put(v1)
         while q.qsize() > 0:
             cur_v = q.get()
