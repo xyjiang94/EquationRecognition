@@ -65,9 +65,9 @@ if __name__ == '__main__':
 	if len(argv) == 3:
 		isWindows_flag = True
 	if isWindows_flag:
-		image_paths = glob(image_folder_path + '/*png')
-	else:
 		image_paths = glob(image_folder_path + '\\*png')
+	else:
+		image_paths = glob(image_folder_path + '/*png')
 	results = []
 	for image_path in image_paths:
 		impred = predict(image_path)
