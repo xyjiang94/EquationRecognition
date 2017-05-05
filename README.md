@@ -22,7 +22,7 @@ Recognize hand-written equations.
 ## Build Instructions
 1. `python preprocessing.py` to generate shelf of training data.(You need annotated folder at this directory.)  
 2. `python MER_NN.py train ./model`
-3. 
+3.
 ## Some Tips and Interesting findings
 
 ## Version

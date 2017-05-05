@@ -5,6 +5,8 @@
 # output lst
 # ----------
 # list :  tuple of format (symbol, x1, y1, x2, y2)
+from segmentation import Segmentation
+from MinimumSpanningTree import MinimumSpanningTree
 
 class Partition(object):
     def __init__(self,mst):
@@ -18,11 +20,9 @@ class Partition(object):
         pass
 
 
-root = -1
-value = []
-for e in mst:
-    root = e
-    value = mst[e]
-    break
-# dp func
-# f(v) =
+fname='./equations/SKMBT_36317040717260_eq6.png'
+seg = Segmentation(fname)
+d = seg.get_labels()
+print d
+mst = MinimumSpanningTree(d)
+pa = Partition(mst)
