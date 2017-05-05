@@ -231,7 +231,7 @@ class SymbolRecognition(object):
 			self.W_conv1 = W_conv1
 		else:
 			self.readout = readout
-	def train(self, data, out_path = 'model.ckpt',target_num = 38):
+	def train(self, data, out_path = './model/model.ckpt',target_num = 38):
 		#cross_entropy_mean = -tf.reduce_mean(self.y_ * tf.log(self.y_conv))
 		cross_entropy_mean = tf.reduce_mean(
 			tf.nn.softmax_cross_entropy_with_logits(labels=self.y_,logits=self.y_conv))
@@ -256,7 +256,7 @@ class SymbolRecognition(object):
 			data.shuffle()
 
 
-			for i in range(5000):
+			for i in range(1):
 				batch_x, batch_y = data.next_batch(100)
 
 				if i%100 == 0:

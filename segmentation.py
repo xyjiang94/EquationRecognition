@@ -123,14 +123,14 @@ class Segmentation(object):
 
 
 if __name__ == '__main__':
-    fname='./equations/SKMBT_36317040717260_eq6.png'
+    fname='/Users/zhengyjo/Desktop/EquationRecognition/equations/SKMBT_36317040717260_eq23.png'
     seg = Segmentation(fname)
 
     print seg.labels
-    # for label in seg.labels.keys():
-    #     print label
-    #     stroke = seg.get_stroke(label)
-    #     scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+    for label in seg.labels.keys():
+        print label
+        stroke = seg.get_stroke(label)
+        scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
     #
     # combined = seg.get_combined_strokes([1,2])
     # scipy.misc.imsave('./tmp/combined.png', combined)
