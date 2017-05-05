@@ -24,7 +24,7 @@ with tf.Session() as sess:
     count = 0
     acc = 0
     fid = 0
-    for i in xrange(1,1001):
+    for i in xrange(1,3492):
         data = sh[str(i)]
         image = data[0]
         res = data[1]
