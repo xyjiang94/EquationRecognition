@@ -15,7 +15,7 @@ class Segmentation(object):
         threshold = 50
 
         img = misc.imread(path)
-
+        self.origin = img
         # smooth the image (to remove small objects)
         imgf = ndimage.gaussian_filter(img, blur_radius)
         threshold = 50
@@ -67,11 +67,18 @@ class Segmentation(object):
 
         stroke = np.copy(self.img[l[0]:l[1],l[2]:l[3]])
 
-        for data in np.nditer(stroke, op_flags=['readwrite']):
-            if data != label:
-                data[...] = 0
-            else:
-                data[...] = 225
+        # for data in np.nditer(stroke, op_flags=['readwrite']):
+        #     if data != label:
+        #         data[...] = 0
+        #     else:
+        #         data[...] = 225
+        shape = stroke.shape
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                if stroke[i][j] != label:
+                    stroke[i][j] = 0
+                else:
+                    stroke[i][j] = self.origin[i+l[0]][j+l[2]]
 
         return stroke
 
@@ -89,11 +96,19 @@ class Segmentation(object):
         bounding = self.get_combined_bounding(l_labels)
         stroke = np.copy(self.img[bounding[0]:bounding[1],bounding[2]:bounding[3]])
 
-        for data in np.nditer(stroke, op_flags=['readwrite']):
-            if data in l_labels:
-                data[...] = 225
-            else:
-                data[...] = 0
+        # for data in np.nditer(stroke, op_flags=['readwrite']):
+        #     if data in l_labels:
+        #         data[...] = 225
+        #     else:
+        #         data[...] = 0
+
+        shape = stroke.shape
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                if stroke[i][j] in l_labels:
+                    stroke[i][j] = self.origin[i+bounding[0]][j+bounding[2]]
+                else:
+                    stroke[i][j] = 0
 
         return stroke
 
@@ -127,10 +142,10 @@ if __name__ == '__main__':
     seg = Segmentation(fname)
 
     print seg.labels
-    # for label in seg.labels.keys():
-    #     print label
-    #     stroke = seg.get_stroke(label)
-    #     scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
-    #
-    # combined = seg.get_combined_strokes([1,2])
-    # scipy.misc.imsave('./tmp/combined.png', combined)
+    for label in seg.labels.keys():
+        print label
+        stroke = seg.get_stroke(label)
+        scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+
+    combined = seg.get_combined_strokes([1,2])
+    scipy.misc.imsave('./tmp/combined.png', combined)
