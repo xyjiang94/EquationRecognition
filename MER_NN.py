@@ -101,10 +101,7 @@ class SymbolRecognition(object):
 									shear = random_shear_angl,
 									scale = (random_x_scale,random_y_scale))
 		return warp(image,trans_mat.inverse,output_shape=image.shape)
-<<<<<<< HEAD
 
-=======
->>>>>>> bf1ccf8f08d28d2a7162e6297c7c27e2df697c0e
 
 	# def get_valid(self,size = 1000):
 	# 	data = self.mnist.train.next_batch(size)
@@ -125,22 +122,22 @@ class SymbolRecognition(object):
 
 
 
-	def get_valid(self,size = 500):
-		data = self.mnist.train.next_batch(size)
-		images = np.zeros((size,32,32))
-		labels = data[1]
-		for i in range(500):
-			images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
-		return images,labels
-	def shuffle(self):
-		pass
-	def next_batch(self,batch_size):
-		data = self.mnist.train.next_batch(batch_size)
-		images = np.zeros((batch_size,32,32))
-		labels = data[1]
-		for i in range(batch_size):
-			images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
-		return images,labels
+	# def get_valid(self,size = 500):
+	# 	data = self.mnist.train.next_batch(size)
+	# 	images = np.zeros((size,32,32))
+	# 	labels = data[1]
+	# 	for i in range(500):
+	# 		images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
+	# 	return images,labels
+	# def shuffle(self):
+	# 	pass
+	# def next_batch(self,batch_size):
+	# 	data = self.mnist.train.next_batch(batch_size)
+	# 	images = np.zeros((batch_size,32,32))
+	# 	labels = data[1]
+	# 	for i in range(batch_size):
+	# 		images[i,:,:] = misc.imresize(np.reshape(data[0][i],(28,28)),(32,32))
+	# 	return images,labels
 
 
 
@@ -258,18 +255,18 @@ class SymbolRecognition(object):
 		for epic in range(1):
 			data.shuffle()
 
-<<<<<<< HEAD
+
 			for i in range(5000):
 				batch_x, batch_y = data.next_batch(100)
-=======
-			for i in range(20000):
-				batch_x, batch_y = data.next_batch(50)
->>>>>>> bf1ccf8f08d28d2a7162e6297c7c27e2df697c0e
+
+			# for i in range(20000):
+			# 	batch_x, batch_y = data.next_batch(50)
+
 			#for i in range(50):
 				#batch_x = x[i]
 				#Reshape attention
 				#batch_x = np.reshape(batch_x,(-1,32,32,1))
-<<<<<<< HEAD
+
 
 				#batch_y = y[i]		
 
@@ -277,9 +274,7 @@ class SymbolRecognition(object):
 
 				#batch_y = y[i]
 
-=======
 
->>>>>>> bf1ccf8f08d28d2a7162e6297c7c27e2df697c0e
 
 				if i%100 == 0:
 					train_accuracy,results,cem = sess.run([accuracy,self.y_res,cross_entropy_mean],
@@ -307,7 +302,7 @@ class SymbolRecognition(object):
 					phist = train_accuracy
 				#If I don't divide it by 255
 				#train_step.run(feed_dict={self.x: batch_x/255.0, self.y_: batch_y, self.keep_prob: 1., self.l_rate: learn_rate	})
-				train_step.run(feed_dict={self.x: batch_x, self.y_: batch_y, self.keep_prob: 1., self.l_rate: learn_rate	})
+				train_step.run(feed_dict={self.x: batch_x, self.y_: batch_y, self.keep_prob: 0.5, self.l_rate: learn_rate	})
 		print valid_x.shape
 		for i in range(500):
 			#misc.imsave('valid'+str(i)+'_'+str(np.argmax(valid_y[i,:]))+'.png',valid_x[i,:,:,0])
