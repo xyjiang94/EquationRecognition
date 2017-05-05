@@ -7,7 +7,7 @@
 # lists :  list of format [symbol, x1, y1, x2, y2]
 from segmentation import Segmentation
 from MinimumSpanningTree import MinimumSpanningTree
-from collections import deque
+from collections import deque, defaultdict
 import imghdr  # recognize img type
 from os import listdir, getcwd, sep
 from os.path import isfile, join
@@ -34,9 +34,17 @@ class Partition(object):
         self.seg = seg
         self.lst = []
         self.generateList()
+        self.count = defaultdict(lambda:0)
 
     def getList(self):
         return self.lst
+
+    def calculateCount(self):
+        for e in self.lst:
+            self.count[e[0]]+=1
+
+    def getCount(self):
+        return self.count
 
     def generateList(self):
         generated = []
@@ -91,7 +99,7 @@ class Partition(object):
                         probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                         p = symMap[str(p[0])]
                         print probability,l,p
-                        if probability>0.8 :
+                        if probability>0.5:
                             self.lst.pop()
                             self.lst.append([p,bb[0],bb[1],bb[2],bb[3],l])
                             lowProb.pop()
@@ -150,3 +158,5 @@ mst = MinimumSpanningTree(d).get_mst()
 print mst
 pa = Partition(mst,seg)
 print pa.getList()
+pa.calculateCount()
+print pa.getCount()
