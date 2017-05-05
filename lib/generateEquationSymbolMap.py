@@ -1,59 +1,50 @@
 import json
 import re
+from os import listdir, getcwd, sep
+from os.path import isfile, join
+import imghdr# recognize img type
 
-def add_symbol(d,symbol):
-    if symbol in d:
-        d[symbol] += 1
+
+def add_symbol(d,number,symbol):
+    if number not in d:
+        d[number] = {}
+    d_eq = d[number]
+    if symbol in d_eq:
+        d_eq[symbol] += 1
     else:
-        d[symbol] = 1
+        d_eq[symbol] = 1
 
-with open('symbol_mapping_all.json', 'r') as opened:
-    symMap = json.loads(opened.read())
+def generate_eq_symbol_mapping():
+    imgFolderPath = getcwd() + sep + "annotated"
+    files = [f for f in listdir(imgFolderPath) if isfile(join(imgFolderPath, f)) and imghdr.what(join(imgFolderPath, f))=='png']
 
-with open('eq.txt','r') as eq:
-    lines = eq.readlines()
+    d_eqSym = {}
 
-d_eqSym = {}
+    for e in files:
+        h = re.match(".*eq(\d*)_(.*)_(\d*)_(\d*)_(\d*)_(\d*)\.png",e)
+        if h is None:
+            print "equation"
+        else:
+            print "snippet"
+            number = h.group(1)
+            symbol = h.group(2)
+            add_symbol(d_eqSym,number,symbol)
 
-i = 0
-for line in lines:
-    i += 1
-    d_eqSym[i] = {}
-    eq_symbols = []
-    if re.match(r'.*?\\frac{.*?}{.*?}.*?',line):
+    with open('eq_symbols.json', 'w') as outfile:
+        json.dump(d_eqSym, outfile, indent = 4)
 
-        fracs = re.findall(r'\\frac{.*?}{.*?}',line)
-        for exp in fracs:
-            exp = re.sub(r'\\frac{','',exp)
-            exp = re.sub(r'}','',exp)
-            symbols = re.split('{',exp)
-            eq_symbols.extend(symbols)
-            eq_symbols.append('frac')
-        line = re.sub(r'\\frac{.*?}{.*?}','',line)
+def generate_eq_latex_mapping():
+    with open('eq.txt','r') as eq:
+        lines = eq.readlines()
+        d_eqLatex = {}
+        i = 0
+        for line in lines:
+            line = re.sub(r'\n','',line)
+            i += 1
+            d_eqLatex[i] = line
 
-    if re.match(r'\\sqrt',line):
-        sqrts = re.findall(r'\\sqrt',line)
-        for exp in sqrts:
-            eq_symbols.append('sqrt')
-        line = re.sub(r'\\sqrt','',line)
+    with open('eq_latex.json', 'w') as outfile:
+        json.dump(d_eqLatex, outfile, indent = 4)
 
-    for c in line:
-        if c != '\n':
-            eq_symbols.append(c)
-
-
-
-
-    for symbol in eq_symbols:
-        add_symbol(d_eqSym[i], symbol)
-
-print d_eqSym[12]
-
-with open('eq_symbols1.json', 'w') as outfile:
-    json.dump(d_eqSym, outfile, indent = 4)
-
-# # sh = shelve.open("eq",writeback=False)
-# #
-# # for i in l_Latex:
-# #     print i
-# # print len(l_Latex)
+if __name__ == '__main__':
+    generate_eq_latex_mapping()
