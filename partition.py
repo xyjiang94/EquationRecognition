@@ -156,6 +156,7 @@ class Partition(object):
                     self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
         self.lst.sort(key = lambda x : x[3])
         print self.lst
+        le = len(self.lst)
         centerList = []
         minusList = []
         deleteList = []
@@ -172,7 +173,7 @@ class Partition(object):
             down = 0
             k=i-1
             flag = ""
-            while centerList[k][1]<self.lst[i][4] and centerList[k][1]>self.lst[i][3]:
+            while k>=0 and centerList[k][1]<self.lst[i][4] and centerList[k][1]>self.lst[i][3]:
                 if k in minusList:
                     l = self.lst[i][-1]+self.lst[k][-1]
                     bb = self.seg.get_combined_bounding(l)
@@ -186,7 +187,7 @@ class Partition(object):
                     down+=1
                 k-=1
             k=i+1
-            while centerList[k][1]<self.lst[i][4] and centerList[k][1]>self.lst[i][3]:
+            while k<le and centerList[k][1]<self.lst[i][4] and centerList[k][1]>self.lst[i][3]:
                 if k in minusList:
                     l = self.lst[i][-1]+self.lst[k][-1]
                     bb = self.seg.get_combined_bounding(l)
