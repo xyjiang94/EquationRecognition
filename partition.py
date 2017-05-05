@@ -108,9 +108,9 @@ class Partition(object):
                             p = sr.p(image)
                             probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                             p = symMap[str(p[0])]
-                            print probability,l,p
+                            print probability,dots,p
                             if probability>0.5:
-                                self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],l])
+                                self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
                                 dots = []
                     elif len(self.lst)>1 and self.lst[-2][0]=="-":
                         x = (bb[2]+bb[3])/2
@@ -165,7 +165,7 @@ class Partition(object):
             image = image/255.
         return image
 
-fname='./equations/SKMBT_36317040717260_eq16.png'
+fname='./equations/SKMBT_36317040717260_eq23.png'
 seg = Segmentation(fname)
 d = seg.get_labels()
 mst = MinimumSpanningTree(d).get_mst()
