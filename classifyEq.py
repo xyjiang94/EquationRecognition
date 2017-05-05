@@ -73,5 +73,6 @@ if __name__ == '__main__':
     pa = Partition(mst,seg)
     l = pa.getList()
     print l
+    c = Classify()
     result = c.classify(l)
     print '\n\n\n',result
