@@ -68,24 +68,8 @@ class Partition(object):
                 self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
                 generated.append(v)
                 if p=="-":
-                    print p,bb
-                    # if len(self.lst)>1:
-                    #     if self.lst[-2][0]=="-":
-                    #         if abs(bb[2]-self.lst[-2][3])<15 and abs(bb[3]-self.lst[-2][4])<15:
-                    #             l = [generated[-2],v]
-                    #             bb = self.seg.get_combined_bounding(l)
-                    #             w = self.lst[-2][-1]
-                    #             self.lst.pop()
-                    #             self.lst.pop()
-                    #             self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],[w,v]])
-                    #     else:
-                    #         x = (self.lst[-2][3]+self.lst[-2][4])/2
-                    #         y = (self.lst[-2][1]+self.lst[-2][2])/2
-                    #         if x>bb[2] and x<bb[3]:
-                    #             if y<(bb[1]+bb[0])/2:
-                    #                 self.lst[-1][0] = "bar"
-                    #             else:
-                    #                 self.lst[-1][0] = "frac"
+                    # print p,bb
+                    pass
                 elif p=="dot":
                     print "dot case"
                     self.lst.pop()
@@ -117,12 +101,6 @@ class Partition(object):
                         if probability>0.:
                             self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
                             dots = []
-                # elif len(self.lst)>1 and self.lst[-2][0]=="-":
-                #     x = (bb[2]+bb[3])/2
-                #     y = (bb[0]+bb[1])/2
-                #     if x>self.lst[-2][3] and x<self.lst[-2][4]:
-                #         if y>(self.lst[-2][1]+self.lst[-2][2])/2:
-                #             self.lst[-2][0] = "frac"
                 elif p=="x" and len(self.lst)>1 and self.lst[-2][0] in ["a","b","c","d","frac"]:
                     self.lst[-1][0]="mul"
 
@@ -131,29 +109,6 @@ class Partition(object):
                     continue
                 queue.append(w[0])
 
-        # for e in dots:
-        #     if e in generated:
-        #         continue
-        #     queue = deque([e])
-        #     conn = []
-        #     while len(queue)>0:
-        #         v = queue.popleft()
-        #         conn.append(v)
-        #         generated.append(v)
-        #         for w in self.mst[v]:
-        #             if w[0] in generated:
-        #                 continue
-        #             queue.append(w[0])
-        #     image = self.seg.get_combined_strokes(conn)
-        #     bb = self.seg.get_combined_bounding(conn)
-        #     image = self.input_wrapper_arr(image)
-        #     test = sr.pr(image)
-        #     p = sr.p(image)
-        #     probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
-        #     p = symMap[str(p[0])]
-        #     print probability,conn,p
-        #     if probability>0. :
-        #         self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
         self.lst.sort(key = lambda x : x[3])
         print self.lst
         le = len(self.lst)
@@ -231,18 +186,20 @@ class Partition(object):
 
 
 if __name__ == '__main__':
-    fname='./equations/SKMBT_36317040717260_eq16.png'
-    seg = Segmentation(fname)
-    d = seg.get_labels()
-    mst = MinimumSpanningTree(d).get_mst()
-    print mst
     with tf.Session() as sess:
         sr = SymbolRecognition(sess, model_path, trainflag=False)
-        pa = Partition(mst,seg,sess,sr)
-        print pa.getList()
-        pa.calculateCount()
-        print pa.getCount()
-        for label in seg.labels.keys():
-            print label
-            stroke = seg.get_stroke(label)
-            scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+        imgFolderPath = getcwd() + sep + "equations"
+        files = [f for f in listdir(imgFolderPath) if isfile(join(imgFolderPath, f)) and imghdr.what(join(imgFolderPath, f))=='png']
+        for fname in files:
+            # fname='./equations/SKMBT_36317040717260_eq16.png'
+            seg = Segmentation(join(imgFolderPath, fname))
+            d = seg.get_labels()
+            mst = MinimumSpanningTree(d).get_mst()
+            pa = Partition(mst,seg,sess,sr)
+            print pa.getList()
+            pa.calculateCount()
+            print pa.getCount()
+            # for label in seg.labels.keys():
+            #     # print label
+            #     stroke = seg.get_stroke(label)
+            #     scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
