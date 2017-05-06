@@ -65,7 +65,7 @@ class Segmentation(object):
     def get_stroke(self,label):
         l = self.labels[label]
 
-        stroke = np.copy(self.img[l[0]:l[1],l[2]:l[3]])
+        stroke = np.copy(self.img[l[0]:l[1] + 1,l[2]:l[3] + 1])
 
         """
         following is binary stroke
@@ -101,7 +101,7 @@ class Segmentation(object):
     # the combined stroke image in format of np array
     def get_combined_strokes(self,l_labels):
         bounding = self.get_combined_bounding(l_labels)
-        stroke = np.copy(self.img[bounding[0]:bounding[1],bounding[2]:bounding[3]])
+        stroke = np.copy(self.img[bounding[0]:bounding[1]+1,bounding[2]:bounding[3]+1])
 
         """
         following is binary stroke
@@ -151,10 +151,11 @@ class Segmentation(object):
 
 
 if __name__ == '__main__':
-    fname='/Users/zhengyjo/Desktop/EquationRecognition/equations/SKMBT_36317040717260_eq23.png'
+    fname='equations/SKMBT_36317040717260_eq15.png'
     seg = Segmentation(fname)
 
     print seg.labels
+
     for label in seg.labels.keys():
         print label
         stroke = seg.get_stroke(label)
@@ -167,4 +168,3 @@ if __name__ == '__main__':
 
     # combined = seg.get_combined_strokes([1,2])
     # scipy.misc.imsave('./tmp/combined.png', combined)
-

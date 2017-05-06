@@ -3,6 +3,11 @@ import math
 from partition import *
 from segmentation import *
 from MinimumSpanningTree import *
+from os import listdir, getcwd, sep
+from os.path import isfile, join
+import imghdr# recognize img type
+import tensorflow as tf
+
 
 class Classify(object):
 
@@ -30,7 +35,7 @@ class Classify(object):
             scores.append(score)
         m = min(scores)
         index = scores.index(m)
-        print scores
+        # print scores
         return [index + 1, self.eq_latex[str(index + 1)]]
 
 
@@ -59,20 +64,56 @@ class Classify(object):
 
         return score
 
+
+
+def test_single(fname):
+    with tf.Session() as sess:
+        sr = SymbolRecognition(sess, model_path, trainflag=False)
+
+        seg = Segmentation(fname)
+        d = seg.get_labels()
+        mst = MinimumSpanningTree(d).get_mst()
+        pa = Partition(mst,seg,sess,sr)
+        l = pa.getList()
+        print l
+        c = Classify()
+        result = c.classify(l)
+        print '\n\n\n',result
+
+def test_whole():
+    imgFolderPath = getcwd() + sep + "annotated"
+    files = [f for f in listdir(imgFolderPath) if isfile(join(imgFolderPath, f)) and imghdr.what(join(imgFolderPath, f))=='png']
+
+    d_count = {}
+    with tf.Session() as sess:
+        sr = SymbolRecognition(sess, model_path, trainflag=False)
+
+        for e in files:
+            h = re.match(".*eq(\d*).png",e)
+            if h is not None:
+                print e
+                number = h.group(1)
+                fname = getcwd() + sep + "annotated" + sep + e
+                seg = Segmentation(fname)
+                d = seg.get_labels()
+                mst = MinimumSpanningTree(d).get_mst()
+                pa = Partition(mst,seg,sess,sr)
+                l = pa.getList()
+                c = Classify()
+                result = c.classify(l)
+
+                recognized_symbols = c.reform_input(l)
+
+                d_count[e] = { 'recognized_symbols' : recognized_symbols, 'true' : int(number), 'res':result[0]}
+        print d_count
+
+        count = 0
+        for key in d_count:
+            if int(d_count[key]['true']) == int(d_count[key]['res']):
+                count += 1
+        print 'accuracy: ', count, len(d_count.keys())
+
 if __name__ == '__main__':
-
-    # symbols = [[u'd', 22, 84, 1002, 1036, [1]], [u'a', 48, 78, 959, 1005, [5]], ['frac', 90, 101, 942, 1065, [7]], [u'b', 118, 163, 964, 995, [20]], [u'c', 129, 165, 1013, 1059, [23]], ['=', 98, 119, 855, 894, [[13], 17]], ['frac', 99, 111, 739, 798, [14]], [u'c', 126, 164, 750, 793, [22]], [u'd', 35, 93, 745, 780, [2]], [u'2', 93, 125, 657, 690, [9]], [u'b', 116, 159, 584, 612, [19]], ['frac', 91, 99, 560, 625, [8]], [u'a', 48, 81, 568, 613, [4]], ['=', 95, 114, 489, 523, [[12], 15]], ['frac', 95, 108, 379, 437, [11]], [u'c', 47, 84, 385, 427, [3]], [u'd', 119, 175, 384, 420, [21]], [u'dot', 131, 142, 306, 315, [24]], ['frac', 113, 122, 289, 326, [18]], [u'dot', 94, 103, 303, 313, [10]], ['frac', 108, 117, 176, 245, [16]], [u'a', 62, 98, 186, 235, [6]], [u'b', 136, 175, 192, 229, [25]]]
-    # c = Classify()
-    # result = c.classify(symbols)
-    # print '\n\n\n',result
-
-    fname='./equations/SKMBT_36317040717260_eq16.png'
-    seg = Segmentation(fname)
-    d = seg.get_labels()
-    mst = MinimumSpanningTree(d).get_mst()
-    pa = Partition(mst,seg)
-    l = pa.getList()
-    print l
-    c = Classify()
-    result = c.classify(l)
-    print '\n\n\n',result
+    test_whole()
+    # test_single('./equations/SKMBT_36317040717260_eq23.png')
+    # test_single('./equations/SKMBT_36317040717260_eq16.png')
