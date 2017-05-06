@@ -18,11 +18,11 @@ Recognize hand-written equations.
 - numpy
 
 ## Run Instructions
+`python predict.py [img folder path]`
 
 ## Build Instructions
 1. `python preprocessing.py` to generate shelf of training data.(You need annotated folder at this directory.)  
 2. `python MER_NN.py train [the address you want to save your model]`
-3. `python predict.py [img folder path]`
 
 ## Some Tips and Interesting findings
 1. Binary or Gray Scale; Segmentation VS training set (the "+")
