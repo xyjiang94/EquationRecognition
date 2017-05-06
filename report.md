@@ -100,7 +100,8 @@ Step 3 gives us a list of symbols and their bounding box. We can use a simple cl
 ## Python Files's Details
 
 ### MER.py
-	1. The training model file, which contains the whole structure of the neural network. The input of this one is from DataWrapperFianl.py
+	1. The training model file, which contains the whole structure of the neural network.   
+	The input of this one is from DataWrapperFianl.py
 
 ### DataWrapperFinal.py
 	1. Take the numpy arrays of training pictures and the corresponding labels as input to produce training set
@@ -119,7 +120,7 @@ Step 3 gives us a list of symbols and their bounding box. We can use a simple cl
 
 ### predict.py
 
-##Result Analysis
+## Result Analysis
 
 ## Reference
 1. Matsakis, Nicholas E. Recognition of handwritten mathematical expressions. Diss. Massachusetts Institute of Technology, 1999.
