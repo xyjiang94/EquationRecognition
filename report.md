@@ -100,23 +100,15 @@ Step 3 gives us a list of symbols and their bounding box. We can use a simple cl
 ## Python Files's Details
 
 ### MER.py
-	1. The training model file, which contains the whole  
-       structure of the neural network.  
-       The input of this one is from DataWrapperFianl.py
+	1. The training model file, which contains the whole structure of the neural network. The input of this one is from DataWrapperFianl.py
 
 ### DataWrapperFinal.py
-	1. Take the numpy arrays of training pictures and   
-		the corresponding labels as input to produce   
-		training set
-	2. Get_valid method is to use the first 500 records  
-		as cross validation sets  
-	3. Next_batch method is to produce the batch of   
-		training set in each step
+	1. Take the numpy arrays of training pictures and the corresponding labels as input to produce training set
+	2. Get_valid method is to use the first 500 records as cross validation sets  
+	3. Next_batch method is to produce the batch of training set in each step
 ### readDB.py
 	1. Read the training shelf from preprocessing  
-	2. Produce the numpy arrays of training pictures and   
-		the corresponding labels.   
-		Then we can feed them into DataWrapperFinal.py
+	2. Produce the numpy arrays of training pictures and the corresponding labels. Then we can feed them into DataWrapperFinal.py
 ### preprocessing.py
 
 ### partition.py
