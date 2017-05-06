@@ -16,6 +16,7 @@ from classifyEq import Classify
 """
 add whatever you think it's essential here
 """
+# global variable
 symMap = {}
 with open('symbol_mapping.json', 'r') as opened:
 	symMap = json.loads(opened.read())
