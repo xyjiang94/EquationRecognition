@@ -51,7 +51,7 @@ class Partition(object):
     def generateList(self):
         generated = []
         dots = []
-<<<<<<< HEAD
+
         with tf.Session() as sess:
             sr = SymbolRecognition(sess, model_path, trainflag=False)
             visited = set([])
@@ -157,7 +157,7 @@ class Partition(object):
             #     print probability,conn,p
             #     if probability>0. :
             #         self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
-=======
+
         visited = set([])
         queue = deque([1])
         while len(queue)>0:
@@ -216,7 +216,7 @@ class Partition(object):
                     continue
                 queue.append(w[0])
 
->>>>>>> cb357ab77deff9934072d9bd0fee50c7d012f28c
+
         self.lst.sort(key = lambda x : x[3])
         print self.lst
         le = len(self.lst)
@@ -294,7 +294,7 @@ class Partition(object):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
+
     fname='./equations/SKMBT_36317040717260_eq16.png'
     seg = Segmentation(fname)
     d = seg.get_labels()
@@ -308,7 +308,7 @@ if __name__ == '__main__':
         print label
         stroke = seg.get_stroke(label)
         scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
-=======
+
     with tf.Session() as sess:
         sr = SymbolRecognition(sess, model_path, trainflag=False)
         imgFolderPath = getcwd() + sep + "equations"
@@ -326,4 +326,4 @@ if __name__ == '__main__':
             #     # print label
             #     stroke = seg.get_stroke(label)
             #     scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
->>>>>>> cb357ab77deff9934072d9bd0fee50c7d012f28c
+
