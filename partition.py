@@ -33,6 +33,7 @@ class Partition(object):
         self.mst = mst
         self.seg = seg
         self.sess = sess
+        self.sr = sr
         self.lst = []
         self.generateList()
         self.count = defaultdict(lambda:0)
@@ -58,8 +59,8 @@ class Partition(object):
             image = self.seg.get_combined_strokes([v])
             bb = self.seg.get_combined_bounding([v])
             image = self.input_wrapper_arr(image)
-            test = sr.pr(image)
-            p = sr.p(image)
+            test = self.sr.pr(image)
+            p = self.sr.p(image)
             probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
             p = symMap[str(p[0])]
             print probability,p
@@ -94,8 +95,8 @@ class Partition(object):
                         image = self.seg.get_combined_strokes(l)
                         bb = self.seg.get_combined_bounding(l)
                         image = self.input_wrapper_arr(image)
-                        test = sr.pr(image)
-                        p = sr.p(image)
+                        test = self.sr.pr(image)
+                        p = self.sr.p(image)
                         probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                         p = symMap[str(p[0])]
                         print probability,l,p
@@ -108,8 +109,8 @@ class Partition(object):
                         image = self.seg.get_combined_strokes(dots)
                         bb = self.seg.get_combined_bounding(dots)
                         image = self.input_wrapper_arr(image)
-                        test = sr.pr(image)
-                        p = sr.p(image)
+                        test = self.sr.pr(image)
+                        p = self.sr.p(image)
                         probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                         p = symMap[str(p[0])]
                         print probability,dots,p
