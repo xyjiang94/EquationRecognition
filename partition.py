@@ -4,7 +4,7 @@
 # dictionary :  key = vertex, value = a list of tuples (tuple: [connected vertex, weight])
 # output lst
 # ----------
-# lists :  list of format [symbol, x1, y1, x2, y2]
+# lists :  list of format [symbol, x1, y1, x2, y2, list of labels]
 from segmentation import Segmentation
 from MinimumSpanningTree import MinimumSpanningTree
 from collections import deque, defaultdict
