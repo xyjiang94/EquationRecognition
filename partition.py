@@ -64,7 +64,7 @@ class Partition(object):
                 probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                 p = symMap[str(p[0])]
                 print probability,p
-                if probability>0.5 :
+                if probability>0. :
                     self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
                     generated.append(v)
                     if p=="-":
@@ -100,7 +100,7 @@ class Partition(object):
                             probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                             p = symMap[str(p[0])]
                             print probability,l,p
-                            if probability>0.5:
+                            if probability>0.:
                                 self.lst.pop()
                                 self.lst.append(["div",bb[0],bb[1],bb[2],bb[3],l])
                                 dots.pop()
@@ -114,7 +114,7 @@ class Partition(object):
                             probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                             p = symMap[str(p[0])]
                             print probability,dots,p
-                            if probability>0.5:
+                            if probability>0.:
                                 self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
                                 dots = []
                     # elif len(self.lst)>1 and self.lst[-2][0]=="-":
@@ -131,29 +131,29 @@ class Partition(object):
                         continue
                     queue.append(w[0])
 
-            for e in dots:
-                if e in generated:
-                    continue
-                queue = deque([e])
-                conn = []
-                while len(queue)>0:
-                    v = queue.popleft()
-                    conn.append(v)
-                    generated.append(v)
-                    for w in self.mst[v]:
-                        if w[0] in generated:
-                            continue
-                        queue.append(w[0])
-                image = self.seg.get_combined_strokes(conn)
-                bb = self.seg.get_combined_bounding(conn)
-                image = self.input_wrapper_arr(image)
-                test = sr.pr(image)
-                p = sr.p(image)
-                probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
-                p = symMap[str(p[0])]
-                print probability,conn,p
-                if probability>0.5 :
-                    self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
+            # for e in dots:
+            #     if e in generated:
+            #         continue
+            #     queue = deque([e])
+            #     conn = []
+            #     while len(queue)>0:
+            #         v = queue.popleft()
+            #         conn.append(v)
+            #         generated.append(v)
+            #         for w in self.mst[v]:
+            #             if w[0] in generated:
+            #                 continue
+            #             queue.append(w[0])
+            #     image = self.seg.get_combined_strokes(conn)
+            #     bb = self.seg.get_combined_bounding(conn)
+            #     image = self.input_wrapper_arr(image)
+            #     test = sr.pr(image)
+            #     p = sr.p(image)
+            #     probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+            #     p = symMap[str(p[0])]
+            #     print probability,conn,p
+            #     if probability>0. :
+            #         self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
         self.lst.sort(key = lambda x : x[3])
         print self.lst
         le = len(self.lst)
@@ -175,7 +175,7 @@ class Partition(object):
             flag = ""
             while k>=0 and centerList[k][1]<self.lst[i][4] and centerList[k][1]>self.lst[i][3]:
                 if k in minusList:
-                    l = self.lst[i][-1]+self.lst[k][-1]
+                    l = self.lst[i][5]+self.lst[k][5]
                     bb = self.seg.get_combined_bounding(l)
                     deleteList.append(i)
                     deleteList.append(k)
@@ -188,11 +188,14 @@ class Partition(object):
                 k-=1
             k=i+1
             while k<le and centerList[k][1]<self.lst[i][4] and centerList[k][1]>self.lst[i][3]:
+                if k in deleteList:
+                    k+=1
+                    continue
                 if k in minusList:
-                    l = self.lst[i][-1]+self.lst[k][-1]
+                    l = self.lst[i][5]+self.lst[k][5]
                     bb = self.seg.get_combined_bounding(l)
-                    deleteList.append(i)
                     deleteList.append(k)
+                    deleteList.append(i)
                     self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],l])
                     flag = "="
                 if centerList[k][0]<centerList[i][0]:
@@ -207,11 +210,9 @@ class Partition(object):
                     self.lst[i][0] = "frac"
                 elif down>0:
                     self.lst[i][0] = "bar"
-        for e in deleteList:
+        dL = sorted(deleteList,reverse=True)
+        for e in dL:
             del self.lst[e]
-
-
-
 
     def input_wrapper_arr(self,image):
         sx,sy = image.shape
