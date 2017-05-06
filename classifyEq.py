@@ -66,7 +66,7 @@ if __name__ == '__main__':
     # result = c.classify(symbols)
     # print '\n\n\n',result
 
-    fname='./equations/SKMBT_36317040717260_eq23.png'
+    fname='./equations/SKMBT_36317040717260_eq16.png'
     seg = Segmentation(fname)
     d = seg.get_labels()
     mst = MinimumSpanningTree(d).get_mst()
