@@ -29,9 +29,10 @@ print symMap
 model_path = join(getcwd(), "model", "model.ckpt")
 
 class Partition(object):
-    def __init__(self,mst,seg):
+    def __init__(self, mst, seg, sess, sr):
         self.mst = mst
         self.seg = seg
+        self.sess = sess
         self.lst = []
         self.generateList()
         self.count = defaultdict(lambda:0)
@@ -49,111 +50,109 @@ class Partition(object):
     def generateList(self):
         generated = []
         dots = []
-        with tf.Session() as sess:
-            sr = SymbolRecognition(sess, model_path, trainflag=False)
-            visited = set([])
-            queue = deque([1])
-            while len(queue)>0:
-                v = queue.popleft()
-                visited.add(v)
-                image = self.seg.get_combined_strokes([v])
-                bb = self.seg.get_combined_bounding([v])
-                image = self.input_wrapper_arr(image)
-                test = sr.pr(image)
-                p = sr.p(image)
-                probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
-                p = symMap[str(p[0])]
-                print probability,p
-                if probability>0. :
-                    self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
-                    generated.append(v)
-                    if p=="-":
-                        print p,bb
-                        # if len(self.lst)>1:
-                        #     if self.lst[-2][0]=="-":
-                        #         if abs(bb[2]-self.lst[-2][3])<15 and abs(bb[3]-self.lst[-2][4])<15:
-                        #             l = [generated[-2],v]
-                        #             bb = self.seg.get_combined_bounding(l)
-                        #             w = self.lst[-2][-1]
-                        #             self.lst.pop()
-                        #             self.lst.pop()
-                        #             self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],[w,v]])
-                        #     else:
-                        #         x = (self.lst[-2][3]+self.lst[-2][4])/2
-                        #         y = (self.lst[-2][1]+self.lst[-2][2])/2
-                        #         if x>bb[2] and x<bb[3]:
-                        #             if y<(bb[1]+bb[0])/2:
-                        #                 self.lst[-1][0] = "bar"
-                        #             else:
-                        #                 self.lst[-1][0] = "frac"
-                    elif p=="dot":
-                        print "dot case"
-                        self.lst.pop()
-                        dots.append(v)
-                        if len(dots)>1 and len(self.lst)>0 and self.lst[-1][0]=="-":
-                            l = [dots[-2],self.lst[-1][-1][0],v]
-                            image = self.seg.get_combined_strokes(l)
-                            bb = self.seg.get_combined_bounding(l)
-                            image = self.input_wrapper_arr(image)
-                            test = sr.pr(image)
-                            p = sr.p(image)
-                            probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
-                            p = symMap[str(p[0])]
-                            print probability,l,p
-                            if probability>0.:
-                                self.lst.pop()
-                                self.lst.append(["div",bb[0],bb[1],bb[2],bb[3],l])
-                                dots.pop()
-                                dots.pop()
-                        elif len(dots) == 3:
-                            image = self.seg.get_combined_strokes(dots)
-                            bb = self.seg.get_combined_bounding(dots)
-                            image = self.input_wrapper_arr(image)
-                            test = sr.pr(image)
-                            p = sr.p(image)
-                            probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
-                            p = symMap[str(p[0])]
-                            print probability,dots,p
-                            if probability>0.:
-                                self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
-                                dots = []
-                    # elif len(self.lst)>1 and self.lst[-2][0]=="-":
-                    #     x = (bb[2]+bb[3])/2
-                    #     y = (bb[0]+bb[1])/2
-                    #     if x>self.lst[-2][3] and x<self.lst[-2][4]:
-                    #         if y>(self.lst[-2][1]+self.lst[-2][2])/2:
-                    #             self.lst[-2][0] = "frac"
-                    elif p=="x" and len(self.lst)>1 and self.lst[-2][0] in ["a","b","c","d","frac"]:
-                        self.lst[-1][0]="mul"
+        visited = set([])
+        queue = deque([1])
+        while len(queue)>0:
+            v = queue.popleft()
+            visited.add(v)
+            image = self.seg.get_combined_strokes([v])
+            bb = self.seg.get_combined_bounding([v])
+            image = self.input_wrapper_arr(image)
+            test = sr.pr(image)
+            p = sr.p(image)
+            probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+            p = symMap[str(p[0])]
+            print probability,p
+            if probability>0. :
+                self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
+                generated.append(v)
+                if p=="-":
+                    print p,bb
+                    # if len(self.lst)>1:
+                    #     if self.lst[-2][0]=="-":
+                    #         if abs(bb[2]-self.lst[-2][3])<15 and abs(bb[3]-self.lst[-2][4])<15:
+                    #             l = [generated[-2],v]
+                    #             bb = self.seg.get_combined_bounding(l)
+                    #             w = self.lst[-2][-1]
+                    #             self.lst.pop()
+                    #             self.lst.pop()
+                    #             self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],[w,v]])
+                    #     else:
+                    #         x = (self.lst[-2][3]+self.lst[-2][4])/2
+                    #         y = (self.lst[-2][1]+self.lst[-2][2])/2
+                    #         if x>bb[2] and x<bb[3]:
+                    #             if y<(bb[1]+bb[0])/2:
+                    #                 self.lst[-1][0] = "bar"
+                    #             else:
+                    #                 self.lst[-1][0] = "frac"
+                elif p=="dot":
+                    print "dot case"
+                    self.lst.pop()
+                    dots.append(v)
+                    if len(dots)>1 and len(self.lst)>0 and self.lst[-1][0]=="-":
+                        l = [dots[-2],self.lst[-1][-1][0],v]
+                        image = self.seg.get_combined_strokes(l)
+                        bb = self.seg.get_combined_bounding(l)
+                        image = self.input_wrapper_arr(image)
+                        test = sr.pr(image)
+                        p = sr.p(image)
+                        probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+                        p = symMap[str(p[0])]
+                        print probability,l,p
+                        if probability>0.:
+                            self.lst.pop()
+                            self.lst.append(["div",bb[0],bb[1],bb[2],bb[3],l])
+                            dots.pop()
+                            dots.pop()
+                    elif len(dots) == 3:
+                        image = self.seg.get_combined_strokes(dots)
+                        bb = self.seg.get_combined_bounding(dots)
+                        image = self.input_wrapper_arr(image)
+                        test = sr.pr(image)
+                        p = sr.p(image)
+                        probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+                        p = symMap[str(p[0])]
+                        print probability,dots,p
+                        if probability>0.:
+                            self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
+                            dots = []
+                # elif len(self.lst)>1 and self.lst[-2][0]=="-":
+                #     x = (bb[2]+bb[3])/2
+                #     y = (bb[0]+bb[1])/2
+                #     if x>self.lst[-2][3] and x<self.lst[-2][4]:
+                #         if y>(self.lst[-2][1]+self.lst[-2][2])/2:
+                #             self.lst[-2][0] = "frac"
+                elif p=="x" and len(self.lst)>1 and self.lst[-2][0] in ["a","b","c","d","frac"]:
+                    self.lst[-1][0]="mul"
 
-                for w in self.mst[v]:
-                    if w[0] in visited:
-                        continue
-                    queue.append(w[0])
+            for w in self.mst[v]:
+                if w[0] in visited:
+                    continue
+                queue.append(w[0])
 
-            # for e in dots:
-            #     if e in generated:
-            #         continue
-            #     queue = deque([e])
-            #     conn = []
-            #     while len(queue)>0:
-            #         v = queue.popleft()
-            #         conn.append(v)
-            #         generated.append(v)
-            #         for w in self.mst[v]:
-            #             if w[0] in generated:
-            #                 continue
-            #             queue.append(w[0])
-            #     image = self.seg.get_combined_strokes(conn)
-            #     bb = self.seg.get_combined_bounding(conn)
-            #     image = self.input_wrapper_arr(image)
-            #     test = sr.pr(image)
-            #     p = sr.p(image)
-            #     probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
-            #     p = symMap[str(p[0])]
-            #     print probability,conn,p
-            #     if probability>0. :
-            #         self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
+        # for e in dots:
+        #     if e in generated:
+        #         continue
+        #     queue = deque([e])
+        #     conn = []
+        #     while len(queue)>0:
+        #         v = queue.popleft()
+        #         conn.append(v)
+        #         generated.append(v)
+        #         for w in self.mst[v]:
+        #             if w[0] in generated:
+        #                 continue
+        #             queue.append(w[0])
+        #     image = self.seg.get_combined_strokes(conn)
+        #     bb = self.seg.get_combined_bounding(conn)
+        #     image = self.input_wrapper_arr(image)
+        #     test = sr.pr(image)
+        #     p = sr.p(image)
+        #     probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+        #     p = symMap[str(p[0])]
+        #     print probability,conn,p
+        #     if probability>0. :
+        #         self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
         self.lst.sort(key = lambda x : x[3])
         print self.lst
         le = len(self.lst)
@@ -236,11 +235,13 @@ if __name__ == '__main__':
     d = seg.get_labels()
     mst = MinimumSpanningTree(d).get_mst()
     print mst
-    pa = Partition(mst,seg)
-    print pa.getList()
-    pa.calculateCount()
-    print pa.getCount()
-    for label in seg.labels.keys():
-        print label
-        stroke = seg.get_stroke(label)
-        scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+    with tf.Session() as sess:
+        sr = SymbolRecognition(sess, model_path, trainflag=False)
+        pa = Partition(mst,seg,sess,sr)
+        print pa.getList()
+        pa.calculateCount()
+        print pa.getCount()
+        for label in seg.labels.keys():
+            print label
+            stroke = seg.get_stroke(label)
+            scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
