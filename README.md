@@ -1,9 +1,9 @@
 # EquationRecognition
 
 ## Author
-- Jiadong Yan  
-- Xinyi Jiang  
-- Zhengyang Zhou
+- [Jiadong Yan](https://github.com/FrankYan93)  
+- [Xinyi Jiang](https://github.com/xyjiang94)  
+- [Zhengyang Zhou](https://github.com/zhengyjo)
 
 ## Description
 Recognize hand-written equations.
