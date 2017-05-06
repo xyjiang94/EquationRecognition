@@ -61,7 +61,7 @@ class Partition(object):
             image = self.input_wrapper_arr(image)
             test = self.sr.pr(image)
             p = self.sr.p(image)
-            probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+            probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
             p = symMap[str(p[0])]
             print probability,p
             if probability>0. :
@@ -97,7 +97,7 @@ class Partition(object):
                         image = self.input_wrapper_arr(image)
                         test = self.sr.pr(image)
                         p = self.sr.p(image)
-                        probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+                        probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                         p = symMap[str(p[0])]
                         print probability,l,p
                         if probability>0.:
@@ -111,7 +111,7 @@ class Partition(object):
                         image = self.input_wrapper_arr(image)
                         test = self.sr.pr(image)
                         p = self.sr.p(image)
-                        probability = sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+                        probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
                         p = symMap[str(p[0])]
                         print probability,dots,p
                         if probability>0.:
