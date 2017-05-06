@@ -12,7 +12,7 @@ from os.path import isfile, join, basename
 from os import listdir, getcwd, sep
 import tensorflow as tf
 from partition import Partition
-
+from classifyEq import Classify
 """
 add whatever you think it's essential here
 """
@@ -86,7 +86,9 @@ def predict(image_path, sess, sr):
 	mst = MinimumSpanningTree(d).get_mst()
 	pa = Partition(mst, seg, sess, sr)
 	l = pa.getList()
-	img_prediction = ImgPred(basename(image_path), l, 'LATEX_REPR')
+	c = Classify()
+	result = c.classify(l)
+	img_prediction = ImgPred(basename(image_path), l, result[1])
 	return img_prediction
 
 
