@@ -26,8 +26,6 @@ with open('symbol_mapping.json', 'r') as opened:
     symMap = json.loads(opened.read())
 print symMap
 
-model_path = join(getcwd(), "model", "model.ckpt")
-
 class Partition(object):
     def __init__(self, mst, seg, sess, sr):
         self.mst = mst
@@ -186,6 +184,7 @@ class Partition(object):
 
 
 if __name__ == '__main__':
+    model_path = join(getcwd(), "model", "model.ckpt")
     with tf.Session() as sess:
         sr = SymbolRecognition(sess, model_path, trainflag=False)
         imgFolderPath = getcwd() + sep + "equations"
