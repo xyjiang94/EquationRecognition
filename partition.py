@@ -4,7 +4,7 @@
 # dictionary :  key = vertex, value = a list of tuples (tuple: [connected vertex, weight])
 # output lst
 # ----------
-# lists :  list of format [symbol, x1, y1, x2, y2]
+# lists :  list of format [symbol, y1, y2, x1, x2, list of labels]
 from segmentation import Segmentation
 from MinimumSpanningTree import MinimumSpanningTree
 from collections import deque, defaultdict
@@ -29,9 +29,11 @@ print symMap
 model_path = join(getcwd(), "model", "model.ckpt")
 
 class Partition(object):
-    def __init__(self,mst,seg):
+    def __init__(self, mst, seg, sess, sr):
         self.mst = mst
         self.seg = seg
+        self.sess = sess
+        self.sr = sr
         self.lst = []
         self.generateList()
         self.count = defaultdict(lambda:0)
@@ -49,6 +51,7 @@ class Partition(object):
     def generateList(self):
         generated = []
         dots = []
+<<<<<<< HEAD
         with tf.Session() as sess:
             sr = SymbolRecognition(sess, model_path, trainflag=False)
             visited = set([])
@@ -154,6 +157,66 @@ class Partition(object):
             #     print probability,conn,p
             #     if probability>0. :
             #         self.lst.append([p,bb[0],bb[1],bb[2],bb[3],conn])
+=======
+        visited = set([])
+        queue = deque([1])
+        while len(queue)>0:
+            v = queue.popleft()
+            visited.add(v)
+            image = self.seg.get_combined_strokes([v])
+            bb = self.seg.get_combined_bounding([v])
+            image = self.input_wrapper_arr(image)
+            test = self.sr.pr(image)
+            p = self.sr.p(image)
+            probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+            p = symMap[str(p[0])]
+            print probability,p
+            if probability>0. :
+                self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
+                generated.append(v)
+                if p=="-":
+                    # print p,bb
+                    pass
+                elif p=="dot":
+                    print "dot case"
+                    self.lst.pop()
+                    dots.append(v)
+                    if len(dots)>1 and len(self.lst)>0 and self.lst[-1][0]=="-":
+                        l = [dots[-2],self.lst[-1][-1][0],v]
+                        image = self.seg.get_combined_strokes(l)
+                        bb = self.seg.get_combined_bounding(l)
+                        image = self.input_wrapper_arr(image)
+                        test = self.sr.pr(image)
+                        p = self.sr.p(image)
+                        probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+                        p = symMap[str(p[0])]
+                        print probability,l,p
+                        if probability>0.:
+                            self.lst.pop()
+                            self.lst.append(["div",bb[0],bb[1],bb[2],bb[3],l])
+                            dots.pop()
+                            dots.pop()
+                    elif len(dots) == 3:
+                        image = self.seg.get_combined_strokes(dots)
+                        bb = self.seg.get_combined_bounding(dots)
+                        image = self.input_wrapper_arr(image)
+                        test = self.sr.pr(image)
+                        p = self.sr.p(image)
+                        probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+                        p = symMap[str(p[0])]
+                        print probability,dots,p
+                        if probability>0.:
+                            self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
+                            dots = []
+                elif p=="x" and len(self.lst)>1 and self.lst[-2][0] in ["a","b","c","d","frac"]:
+                    self.lst[-1][0]="mul"
+
+            for w in self.mst[v]:
+                if w[0] in visited:
+                    continue
+                queue.append(w[0])
+
+>>>>>>> cb357ab77deff9934072d9bd0fee50c7d012f28c
         self.lst.sort(key = lambda x : x[3])
         print self.lst
         le = len(self.lst)
@@ -231,6 +294,7 @@ class Partition(object):
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     fname='./equations/SKMBT_36317040717260_eq16.png'
     seg = Segmentation(fname)
     d = seg.get_labels()
@@ -244,3 +308,22 @@ if __name__ == '__main__':
         print label
         stroke = seg.get_stroke(label)
         scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+=======
+    with tf.Session() as sess:
+        sr = SymbolRecognition(sess, model_path, trainflag=False)
+        imgFolderPath = getcwd() + sep + "equations"
+        files = [f for f in listdir(imgFolderPath) if isfile(join(imgFolderPath, f)) and imghdr.what(join(imgFolderPath, f))=='png']
+        for fname in files:
+            # fname='./equations/SKMBT_36317040717260_eq16.png'
+            seg = Segmentation(join(imgFolderPath, fname))
+            d = seg.get_labels()
+            mst = MinimumSpanningTree(d).get_mst()
+            pa = Partition(mst,seg,sess,sr)
+            print pa.getList()
+            pa.calculateCount()
+            print pa.getCount()
+            # for label in seg.labels.keys():
+            #     # print label
+            #     stroke = seg.get_stroke(label)
+            #     scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
+>>>>>>> cb357ab77deff9934072d9bd0fee50c7d012f28c
