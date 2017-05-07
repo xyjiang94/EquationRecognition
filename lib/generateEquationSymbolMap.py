@@ -46,5 +46,40 @@ def generate_eq_latex_mapping():
     with open('eq_latex.json', 'w') as outfile:
         json.dump(d_eqLatex, outfile, indent = 4)
 
+def modify_err():
+    with open('./lib/err.json', 'r') as f:
+        err = json.loads(f.read())
+    with open('./lib/eq_symbols.json', 'r') as f:
+        eq_symbols = json.loads(f.read())
+
+    for d in err:
+        print d
+        d['true_symbols'] = eq_symbols[str(d['true'])]
+
+    with open('./lib/err.json', 'w') as outfile:
+        json.dump(err, outfile, indent = 4)
+
+def err_analyze():
+    with open('./lib/err.json', 'r') as f:
+        err = json.loads(f.read())
+        d_anly = {}
+        for d in err:
+            if d['true'] not in d_anly:
+                d_anly[d['true']] = {'count': 0, 'images' : []}
+            d_anly[d['true']]['images'].append(d['image'])
+            d_anly[d['true']]['count'] += 1
+        with open('./lib/err_analyze.json', 'w') as outfile:
+            json.dump(d_anly, outfile, indent = 4)
+
+        l = []
+        for key in d_anly:
+            l.append([key, d_anly[key]['count']])
+
+        l = sorted(l, key = lambda x: x[1])
+        print l
+
+
 if __name__ == '__main__':
-    generate_eq_latex_mapping()
+    # generate_eq_latex_mapping()
+    # modify_err()
+    err_analyze()

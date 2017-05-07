@@ -50,6 +50,14 @@ class Segmentation(object):
                         bounding[1] = row
                     if bounding[3] < col:
                         bounding[3] = col
+
+        to_del = []
+        for label in labels:
+            bounding = labels[label]
+            if (bounding[1] - bounding[0]) * (bounding[3] - bounding[2]) < 50:
+                to_del.append(label)
+        for key in to_del:
+            del labels[key]
         return labels
 
 
@@ -151,7 +159,7 @@ class Segmentation(object):
 
 
 if __name__ == '__main__':
-    fname='equations/SKMBT_36317040717260_eq15.png'
+    fname='annotated/SKMBT_36317040717280_eq3.png'
     seg = Segmentation(fname)
 
     print seg.labels
@@ -162,8 +170,8 @@ if __name__ == '__main__':
         scipy.misc.imsave('./tmp/'+ str(label)+'.png', stroke)
 
     #
-    # combined = seg.get_combined_strokes([1,2])
-    # scipy.misc.imsave('./tmp/combined.png', combined)
+    origin = seg.origin
+    scipy.misc.imsave('./tmp/origin.png', origin)
 
 
     # combined = seg.get_combined_strokes([1,2])
