@@ -166,6 +166,7 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 1. Matsakis, Nicholas E. Recognition of handwritten mathematical expressions. Diss. Massachusetts Institute of Technology, 1999.
 
 ## Contribution
-Jiadong Yan: preprocessing.py, recognize.py, recognizeFromShelf.py, partition.py, predict.py
-Xinyi Jiang: segmentation.py, MinimumSpanningTree.py, classifyEq.py
-Zhengyang Zhou: DataWrapperFinal.py, MER_NN.py, readDB.py
+Generally we have nearly equal responsibility for the project.
+- Jiadong Yan: preprocessing.py, recognize.py, recognizeFromShelf.py, partition.py, predict.py
+- Xinyi Jiang: segmentation.py, MinimumSpanningTree.py, classifyEq.py
+- Zhengyang Zhou: DataWrapperFinal.py, MER_NN.py, readDB.py
