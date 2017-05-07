@@ -112,7 +112,7 @@ class Partition(object):
                 queue.append(w[0])
 
         self.lst.sort(key = lambda x : x[3])
-        print self.lst
+        # print self.lst
         le = len(self.lst)
         centerList = []
         minusList = []
@@ -191,7 +191,8 @@ class Partition(object):
                 deleteList.append(i)
                 deleteList.append(i+1)
                 deleteList.append(i+2)
-                l = self.lst[i][5]+self.lst[i+1][5]+self.lst[i+2][5]
+                deleteList.append(i+3)
+                l = self.lst[i][5]+self.lst[i+1][5]+self.lst[i+2][5]+self.lst[i+3][5]
                 bb = self.seg.get_combined_bounding(l)
                 self.lst.append(["sin",bb[0],bb[1],bb[2],bb[3],l])
 
@@ -234,6 +235,7 @@ if __name__ == '__main__':
         files = [f for f in listdir(imgFolderPath) if isfile(join(imgFolderPath, f)) and imghdr.what(join(imgFolderPath, f))=='png']
         for fname in files:
             # fname='./equations/SKMBT_36317040717260_eq16.png'
+            print fname
             seg = Segmentation(join(imgFolderPath, fname))
             d = seg.get_labels()
             mst = MinimumSpanningTree(d).get_mst()
