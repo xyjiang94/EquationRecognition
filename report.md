@@ -27,7 +27,7 @@ Recognize hand-written equations.
 ## Introduction of the frame of project
 The project has two main part. The first part is the neural networks that is trained to recognize isolated symbols. The other part is the algorithm to partition the image correctly, as long as recognize the equation. The second part is inspired by the paper written by NE Matsakis.[1]  
 
-### neural network
+### Neural Network
 At the very first beginning, we decided to use convolutional neural network to recognize the equations directly without segmentation, but we failed as we saw the model could cause more confusions when predicting. Since the time is limited, we switch our way to deal with this project in the current way.
 
 For the neural network, we construct the training model based on Zhihao's CNN on digit-recognizaiton. In order to make the model more efficient, we apply a lot of techniques such as size wrapping, deformation, drop-out rate adjustment and so on, which we will elaborate in **Some Tips and Interesting findings**. Generally, we find that in order to recognize **38** different symbols, we need to include more features on the input of the readout layer. In addition, in case the F(X) is too small, we also have some skip layers to mitigate the effect of vanishing gradient for bottom layer like the following:
@@ -136,7 +136,7 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 	* The weight between any two strokes is the Euclidean distance between the centroids of their bounding boxes
 
 ### partition.py
-  - The `Partition` class can be initialized with a `MinimumSpanningTree`'s dict output, a `Segmentation` instance that is related to a specific image(of png format), a `session` and a shared `SymbolRecognition` instance that is initialized with model_path.
+  - The `Partition` class can be initialized with a `MinimumSpanningTree`'s dict output, a `Segmentation` instance that is related to a specific image(of png format), a `session` and a shared `SymbolRecognition` instance that is initialized with model_path. It's an error to create a `session` and a `SymbolRecognition` inside the `Partition` class since we would create multiple partition class to recognize multiple equations.
   - The algorithm:
     1. Visit the mst(`MinimumSpanningTree`'s dict output, key = vertex, value = a list of tuples (tuple: [connected vertex, weight])) once and recognize all the segmented image and store result([symbol, y1, y2, x1, x2, list of labels]) to `self.lst`.   
     2. Sort `self.lst` by x1.
@@ -164,3 +164,8 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 
 ## Reference
 1. Matsakis, Nicholas E. Recognition of handwritten mathematical expressions. Diss. Massachusetts Institute of Technology, 1999.
+
+## Contribution
+Jiadong Yan: preprocessing.py, recognize.py, recognizeFromShelf.py, partition.py, predict.py
+Xinyi Jiang: segmentation.py, MinimumSpanningTree.py, classifyEq.py
+Zhengyang Zhou: DataWrapperFinal.py, MER_NN.py, readDB.py
