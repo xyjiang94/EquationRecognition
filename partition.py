@@ -116,12 +116,18 @@ class Partition(object):
         le = len(self.lst)
         centerList = []
         minusList = []
+        sList = []
+        tList = []
         deleteList = []
         idx = 0
         for e in self.lst:
             centerList.append([(e[1]+e[2])/2,(e[3]+e[4])/2])
             if e[0]=="-":
                 minusList.append(idx)
+            elif e[0]=="s":
+                sList.append(idx)
+            elif e[0]=="t":
+                tList.append(idx)
             idx+=1
         for i in minusList:
             if i in deleteList:
@@ -167,6 +173,39 @@ class Partition(object):
                     self.lst[i][0] = "frac"
                 elif down>0:
                     self.lst[i][0] = "bar"
+
+        for i in sList:
+            if i in deleteList:
+                continue
+            k=i-1
+            if k>0 and self.lst[k][4]<self.lst[k+1][3] and self.lst[k][0]=="o":
+                # to the left of i
+                deleteList.append(i)
+                deleteList.append(i-1)
+                deleteList.append(i-2)
+                l = self.lst[i][5]+self.lst[i-1][5]+self.lst[i-2][5]
+                bb = self.seg.get_combined_bounding(l)
+                self.lst.append(["cos",bb[0],bb[1],bb[2],bb[3],l])
+            elif i+2<le:
+                # right
+                deleteList.append(i)
+                deleteList.append(i+1)
+                deleteList.append(i+2)
+                l = self.lst[i][5]+self.lst[i+1][5]+self.lst[i+2][5]
+                bb = self.seg.get_combined_bounding(l)
+                self.lst.append(["sin",bb[0],bb[1],bb[2],bb[3],l])
+
+        for i in  tList:
+            if i in deleteList:
+                continue
+            if i+2<le and self.lst[i+1][0]=="a":
+                deleteList.append(i)
+                deleteList.append(i+1)
+                deleteList.append(i+2)
+                l = self.lst[i][5]+self.lst[i+1][5]+self.lst[i+2][5]
+                bb = self.seg.get_combined_bounding(l)
+                self.lst.append(["tan",bb[0],bb[1],bb[2],bb[3],l])
+
         dL = sorted(deleteList,reverse=True)
         for e in dL:
             del self.lst[e]
