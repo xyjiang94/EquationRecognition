@@ -108,7 +108,9 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 ## Python Files's Details
 
 ### preprocessing.py
-
+  - Used regular expression to recognize segmented piece of image.
+  - Transformed the image to standard 32*32 np array.
+  - Stored data to a db file as training data to avoid waste of preprocessing time when training.
 
 ### MER_NN.py
 	1. The training model file, which contains the whole structure of the neural network.   
@@ -133,10 +135,19 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 	* The weight between any two strokes is the Euclidean distance between the centroids of their bounding boxes
 
 ### partition.py
+  - The `Partition` class can be initialized with a `MinimumSpanningTree`'s dict output, a `Segmentation` instance that is related to a specific image(of png format), a `session` and a shared `SymbolRecognition` instance that is initialized with model_path.
+  - The algorithm:
+    1. Visit the mst(`MinimumSpanningTree`'s dict output, key = vertex, value = a list of tuples (tuple: [connected vertex, weight])) once and recognize all the segmented image and store result([symbol, y1, y2, x1, x2, list of labels]) to `self.lst`.   
+    2. Sort `self.lst` by x1.
+    3. Deal with ".": If there are 2 dots and there is a "-" between them. I would combine the three elements and create new segment called "div" and delete old 3 elements. If there are 3 dots consequently, I would transform them to a single segment called "dots"
+    4. Deal with "-": If there are two "-" whose x1,x2 has some range in common, then turn them into a "=". If Detected upper element and lower element of "-" , then turn "-" into "frac". If only lower element was detected, turn "-" into "bar".
+    5. If left and right of "x" are variables or frac then turn "x" into "mul".
 
 ### recognize.py
+  - Mainly written for debug. Recognize image directly and calculate the accuracy and output results.
 
 ### recognizeFromShelf.py
+  - Mainly written for debug. Recognize image from preprocessed db and calculate the accuracy and output results.
 
 ### classifyEq.py
 	* This class takes the output of `partition.py` to initiate, and returns the number and latex expression of the most likely equation
@@ -146,6 +157,7 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 	* We test all the equations in annotated folder, and get 325 correct results out of 389 equations. The accuracy rate is 83.5%
 
 ### predict.py
+  - Combine all modules we made together and generate the result txt file.
 
 ## Result Analysis
 
