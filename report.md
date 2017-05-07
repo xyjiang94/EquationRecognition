@@ -102,15 +102,16 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 	* Similar with previous one, we have to keep the range of the elements in numpy arrays that the training pictures are transformed to, and the of the segmented pictures the same. For example, if each element in a numpy array of training picture is in [0,1], then the element in the array of segmented pictures should also be in [0,1]. Otherwise, we will have an extremely low accuracy.
 
 8. Deal with ".", "-", "x"
-----佳栋交给你啦---------------
-
+  * Deal with ".": If there are 2 dots and there is a "-" between them. I would combine the three elements and create new segment called "div" and delete old 3 elements. If there are 3 dots consequently, I would transform them to a single segment called "dots"
+  * Deal with "-": If there are two "-" whose x1,x2 has some range in common, then turn them into a "=". If Detected upper element and lower element of "-" , then turn "-" into "frac". If only lower element was detected, turn "-" into "bar".
+  * If left and right of "x" are variables or frac then turn "x" into "mul".
 
 ## Python Files's Details
 
 ### preprocessing.py
-  - Used regular expression to recognize segmented piece of image.
-  - Transformed the image to standard 32*32 np array.
-  - Stored data to a db file as training data to avoid waste of preprocessing time when training.
+  1. Used regular expression to recognize segmented piece of image.
+  2. Transformed the image to standard 32*32 np array.
+  3. Stored data to a db file as training data to avoid waste of preprocessing time when training.
 
 ### MER_NN.py
 	1. The training model file, which contains the whole structure of the neural network.   
