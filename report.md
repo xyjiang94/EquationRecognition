@@ -103,7 +103,7 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 
 8. Deal with ".", "-", "x"
   * Deal with ".": If there are 2 dots and there is a "-" between them. I would combine the three elements and create new segment called "div" and delete old 3 elements. If there are 3 dots consequently, I would transform them to a single segment called "dots"
-  * Deal with "-": If there are two "-" whose x1,x2 has some range in common, then turn them into a "=". If Detected upper element and lower element of "-" , then turn "-" into "frac". If only lower element was detected, turn "-" into "bar".
+  * Deal with "-": If there are two "-" whose x1,x2 has some range in common, then turn them into a "=". If there is a "+" at the up side of "-", combine them and turn them into "pm". If Detected upper element and lower element of "-" , then turn "-" into "frac". If only lower element was detected, turn "-" into "bar".
   * If left and right of "x" are variables or frac then turn "x" into "mul".
 
 ## Python Files's Details
@@ -145,7 +145,7 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
     1. Visit the mst(`MinimumSpanningTree`'s dict output, key = vertex, value = a list of tuples (tuple: [connected vertex, weight])) once and recognize all the segmented image and store result([symbol, y1, y2, x1, x2, list of labels]) to `self.lst`.   
     2. Sort `self.lst` by x1.
     3. Deal with ".": If there are 2 dots and there is a "-" between them. I would combine the three elements and create new segment called "div" and delete old 3 elements. If there are 3 dots consequently, I would transform them to a single segment called "dots"
-    4. Deal with "-": If there are two "-" whose x1,x2 has some range in common, then turn them into a "=". If Detected upper element and lower element of "-" , then turn "-" into "frac". If only lower element was detected, turn "-" into "bar".
+    4. Deal with "-": If there are two "-" whose x1,x2 has some range in common, then turn them into a "=". If there is a "+" at the up side of "-", combine them and turn them into "pm". If Detected upper element and lower element of "-" , then turn "-" into "frac". If only lower element was detected, turn "-" into "bar".
     5. If left and right of "x" are variables or frac then turn "x" into "mul".
 
 ### recognize.py
