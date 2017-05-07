@@ -50,7 +50,11 @@ class Partition(object):
         generated = []
         dots = []
         visited = set([])
-        queue = deque([1])
+        if len(self.mst)==0:
+            return
+        for e in self.mst:
+            queue = deque([e])
+            break
         while len(queue)>0:
             v = queue.popleft()
             visited.add(v)
@@ -69,7 +73,7 @@ class Partition(object):
                 # print p,bb
                 pass
             elif p=="dot":
-                print "dot case"
+                # print "dot case"
                 self.lst.pop()
                 dots.append(v)
                 if len(dots)>1 and len(self.lst)>0 and self.lst[-1][0]=="-":
