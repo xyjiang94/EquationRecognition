@@ -137,7 +137,11 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 
 ### partition.py
   - The `Partition` class can be initialized with a `MinimumSpanningTree`'s dict output, a `Segmentation` instance that is related to a specific image(of png format), a `session` and a shared `SymbolRecognition` instance that is initialized with model_path. It's an error to create a `session` and a `SymbolRecognition` inside the `Partition` class since we would create multiple partition class to recognize multiple equations.
-  - The algorithm:
+  - The algorithm:  
+    I tried to use probability of the result to find segments with low probability and put them into combine list.  
+    However, this is actually too slow since each symbol need to have an additional calculation of softmax and argmax.  
+    So I finally clear up all the probability related part and rewrite the partiotion.
+    Here is the last simplified edition:
     1. Visit the mst(`MinimumSpanningTree`'s dict output, key = vertex, value = a list of tuples (tuple: [connected vertex, weight])) once and recognize all the segmented image and store result([symbol, y1, y2, x1, x2, list of labels]) to `self.lst`.   
     2. Sort `self.lst` by x1.
     3. Deal with ".": If there are 2 dots and there is a "-" between them. I would combine the three elements and create new segment called "div" and delete old 3 elements. If there are 3 dots consequently, I would transform them to a single segment called "dots"
