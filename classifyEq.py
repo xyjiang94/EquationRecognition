@@ -133,10 +133,10 @@ def test_whole():
         print 'accuracy: ', count, len(d_count.keys())
 
 if __name__ == '__main__':
-    # t1 = datetime.datetime.now()
-    # test_whole()
-    # t2 = datetime.datetime.now()
-    # print t2 - t1
+    t1 = datetime.datetime.now()
+    test_whole()
+    t2 = datetime.datetime.now()
+    print t2 - t1
 
-    test_single('./annotated/SKMBT_36317040717360_eq24.png')
+    # test_single('./annotated/SKMBT_36317040717360_eq24.png')
     # test_single('./equations/SKMBT_36317040717260_eq16.png')
