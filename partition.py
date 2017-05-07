@@ -57,50 +57,50 @@ class Partition(object):
             image = self.seg.get_combined_strokes([v])
             bb = self.seg.get_combined_bounding([v])
             image = self.input_wrapper_arr(image)
-            test = self.sr.pr(image)
+            # test = self.sr.pr(image)
             p = self.sr.p(image)
-            probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+            # probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
             p = symMap[str(p[0])]
-            print probability,p
-            if probability>0. :
-                self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
-                generated.append(v)
-                if p=="-":
-                    # print p,bb
-                    pass
-                elif p=="dot":
-                    print "dot case"
+            # print probability,p
+            # if probability>0. :
+            self.lst.append([p,bb[0],bb[1],bb[2],bb[3],[v]])
+            generated.append(v)
+            if p=="-":
+                # print p,bb
+                pass
+            elif p=="dot":
+                print "dot case"
+                self.lst.pop()
+                dots.append(v)
+                if len(dots)>1 and len(self.lst)>0 and self.lst[-1][0]=="-":
+                    l = [dots[-2],self.lst[-1][-1][0],v]
+                    image = self.seg.get_combined_strokes(l)
+                    bb = self.seg.get_combined_bounding(l)
+                    image = self.input_wrapper_arr(image)
+                    test = self.sr.pr(image)
+                    p = self.sr.p(image)
+                    # probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+                    p = symMap[str(p[0])]
+                    # print probability,l,p
+                    # if probability>0.:
                     self.lst.pop()
-                    dots.append(v)
-                    if len(dots)>1 and len(self.lst)>0 and self.lst[-1][0]=="-":
-                        l = [dots[-2],self.lst[-1][-1][0],v]
-                        image = self.seg.get_combined_strokes(l)
-                        bb = self.seg.get_combined_bounding(l)
-                        image = self.input_wrapper_arr(image)
-                        test = self.sr.pr(image)
-                        p = self.sr.p(image)
-                        probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
-                        p = symMap[str(p[0])]
-                        print probability,l,p
-                        if probability>0.:
-                            self.lst.pop()
-                            self.lst.append(["div",bb[0],bb[1],bb[2],bb[3],l])
-                            dots.pop()
-                            dots.pop()
-                    elif len(dots) == 3:
-                        image = self.seg.get_combined_strokes(dots)
-                        bb = self.seg.get_combined_bounding(dots)
-                        image = self.input_wrapper_arr(image)
-                        test = self.sr.pr(image)
-                        p = self.sr.p(image)
-                        probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
-                        p = symMap[str(p[0])]
-                        print probability,dots,p
-                        if probability>0.:
-                            self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
-                            dots = []
-                elif p=="x" and len(self.lst)>1 and self.lst[-2][0] in ["a","b","c","d","frac"]:
-                    self.lst[-1][0]="mul"
+                    self.lst.append(["div",bb[0],bb[1],bb[2],bb[3],l])
+                    dots.pop()
+                    dots.pop()
+                elif len(dots) == 3:
+                    image = self.seg.get_combined_strokes(dots)
+                    bb = self.seg.get_combined_bounding(dots)
+                    image = self.input_wrapper_arr(image)
+                    test = self.sr.pr(image)
+                    p = self.sr.p(image)
+                    # probability = self.sess.run(tf.nn.softmax(test)[0][0][0][p[0]])
+                    p = symMap[str(p[0])]
+                    # print probability,dots,p
+                    # if probability>0.:
+                    self.lst.append(["dots",bb[0],bb[1],bb[2],bb[3],dots])
+                    dots = []
+            elif p=="x" and len(self.lst)>1 and self.lst[-2][0] in ["a","b","c","d","frac"]:
+                self.lst[-1][0]="mul"
 
             for w in self.mst[v]:
                 if w[0] in visited:

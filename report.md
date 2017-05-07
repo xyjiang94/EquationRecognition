@@ -110,7 +110,7 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 ### preprocessing.py
 
 
-### MER.py
+### MER_NN.py
 	1. The training model file, which contains the whole structure of the neural network.   
 	The input of this one is from DataWrapperFianl.py
 
