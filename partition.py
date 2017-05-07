@@ -178,7 +178,7 @@ class Partition(object):
             if i in deleteList:
                 continue
             k=i-1
-            if k>0 and self.lst[k][4]<self.lst[k+1][3] and self.lst[k][0]=="o":
+            if k>0 and self.lst[k][4]<self.lst[k+1][3] and self.lst[k][0]=="o" and self.lst[k-1][0]=="c":
                 # to the left of i
                 deleteList.append(i)
                 deleteList.append(i-1)
@@ -186,7 +186,7 @@ class Partition(object):
                 l = self.lst[i][5]+self.lst[i-1][5]+self.lst[i-2][5]
                 bb = self.seg.get_combined_bounding(l)
                 self.lst.append(["cos",bb[0],bb[1],bb[2],bb[3],l])
-            elif i+3<le:
+            elif i+3<le and self.lst[i+3][0]=="n":
                 # right
                 deleteList.append(i)
                 deleteList.append(i+1)
@@ -199,7 +199,7 @@ class Partition(object):
         for i in  tList:
             if i in deleteList:
                 continue
-            if i+2<le and self.lst[i+1][0]=="a":
+            if i+2<le and self.lst[i+1][0]=="a" and self.lst[i+2][0]=="n":
                 deleteList.append(i)
                 deleteList.append(i+1)
                 deleteList.append(i+2)
