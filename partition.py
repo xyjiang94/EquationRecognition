@@ -138,13 +138,6 @@ class Partition(object):
                     deleteList.append(k)
                     self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],l])
                     flag = "="
-                elif self.lst[k][0] == "+":
-                    l = self.lst[i][5]+self.lst[k][5]
-                    bb = self.seg.get_combined_bounding(l)
-                    deleteList.append(i)
-                    deleteList.append(k)
-                    self.lst.append(["pm",bb[0],bb[1],bb[2],bb[3],l])
-                    flag = "pm"
                 if centerList[k][0]<centerList[i][0]:
                     up+=1
                 else:
@@ -162,19 +155,12 @@ class Partition(object):
                     deleteList.append(i)
                     self.lst.append(["=",bb[0],bb[1],bb[2],bb[3],l])
                     flag = "="
-                elif self.lst[k][0] == "+":
-                    l = self.lst[i][5]+self.lst[k][5]
-                    bb = self.seg.get_combined_bounding(l)
-                    deleteList.append(i)
-                    deleteList.append(k)
-                    self.lst.append(["pm",bb[0],bb[1],bb[2],bb[3],l])
-                    flag = "pm"
                 if centerList[k][0]<centerList[i][0]:
                     up+=1
                 else:
                     down+=1
                 k+=1
-            if flag == "=" or flag == "pm":
+            if flag == "=":
                 continue
             else:
                 if up>0:
