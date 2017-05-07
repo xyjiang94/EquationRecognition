@@ -186,7 +186,7 @@ class Partition(object):
                 l = self.lst[i][5]+self.lst[i-1][5]+self.lst[i-2][5]
                 bb = self.seg.get_combined_bounding(l)
                 self.lst.append(["cos",bb[0],bb[1],bb[2],bb[3],l])
-            elif i+2<le:
+            elif i+3<le:
                 # right
                 deleteList.append(i)
                 deleteList.append(i+1)
