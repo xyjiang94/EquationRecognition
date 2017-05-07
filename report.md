@@ -142,11 +142,14 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
     However, this is actually too slow since each symbol need to have an additional calculation of softmax and argmax.  
     So I finally clear up all the probability related part and rewrite the partiotion.
     Here is the last simplified edition:
-    1. Visit the mst(`MinimumSpanningTree`'s dict output, key = vertex, value = a list of tuples (tuple: [connected vertex, weight])) once and recognize all the segmented image and store result([symbol, y1, y2, x1, x2, list of labels]) to `self.lst`.   
+    1. Visit the mst(`MinimumSpanningTree`'s dict output, key = vertex, value = a list of tuples (tuple: [connected vertex, weight])) once and recognize all the segmented image and store result([symbol, y1, y2, x1, x2, list of labels]) to `self.lst`.O(n)   
     2. Sort `self.lst` by x1.
     3. Deal with ".": If there are 2 dots and there is a "-" between them. I would combine the three elements and create new segment called "div" and delete old 3 elements. If there are 3 dots consequently, I would transform them to a single segment called "dots"
     4. Deal with "-": If there are two "-" whose x1,x2 has some range in common, then turn them into a "=". If there is a "+" at the up side of "-", combine them and turn them into "pm". If Detected upper element and lower element of "-" , then turn "-" into "frac". If only lower element was detected, turn "-" into "bar".
     5. If left and right of "x" are variables or frac then turn "x" into "mul".
+    6. sin, cos, tan: Sometimes they are not connected, so I developed a technique to combine them. Actually, I will go through the sorted list once again and find important symbols' index. Thes symbols are "-", "s" and "t". "-" is used for step 4. "s" could be two cases: "cos"'s last "s" or "sin"'s first "s". I would check 2 index before "s" to see if it should be "cos", otherwise I would check 3(i is usually 2 segments) index away after it to see if it is "sin". Similarly, I can detect "tan". The complexity after sort the list is Just O(number of "s" and "t" and "-").
+    7. Actually, I did not delete the combined symbol right away. I put their index into deleteList since I don't want the delete disturb my index record. When delete by index, I sort the deleteList in reverse order, then loop through the deleteList and delete big index first, which is safe. This is O(number of "s" and "t" and "-")
+    8. Finally, you can get the output symbol list by `Partition`'s method `getList()`. In conclusion the complexity is the complexity of sort, O(n log n).
 
 ### recognize.py
   - Mainly written for debug. Recognize image directly and calculate the accuracy and output results.
