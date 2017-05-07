@@ -38,26 +38,11 @@
             "b": 1, 
             "frac": 1, 
             "(": 1, 
-            "n": 3, 
+            "n": 2, 
             "=": 1, 
             "sin": 1
         }, 
         "res": 11
-    }, 
-    {
-        "true": 34, 
-        "image": "SKMBT_36317040717351_eq34.png", 
-        "recognized_symbols": {
-            "A": 1, 
-            "c": 1, 
-            "+": 1, 
-            "n": 1, 
-            "0": 1, 
-            "2": 1, 
-            "delta": 1, 
-            "sin": 2
-        }, 
-        "res": 28
     }, 
     {
         "true": 14, 
@@ -84,22 +69,6 @@
             "sqrt": 1
         }, 
         "res": 8
-    }, 
-    {
-        "true": 31, 
-        "image": "SKMBT_36317040717320_eq31.png", 
-        "recognized_symbols": {
-            "c": 1, 
-            "b": 1, 
-            "frac": 1, 
-            "sqrt": 1, 
-            "0": 1, 
-            "3": 1, 
-            "2": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 28
     }, 
     {
         "true": 22, 
@@ -137,14 +106,17 @@
         "image": "SKMBT_36317040717291_eq35.png", 
         "recognized_symbols": {
             "a": 1, 
+            "A": 1, 
             "k": 1, 
-            "n": 1, 
+            "3": 1, 
+            "n": 2, 
             "1": 1, 
+            "s": 2, 
+            "x": 1, 
             "tan": 1, 
-            "=": 1, 
-            "sin": 2
+            "=": 1
         }, 
-        "res": 28
+        "res": 3
     }, 
     {
         "true": 5, 
@@ -183,16 +155,6 @@
         "res": 15
     }, 
     {
-        "true": 30, 
-        "image": "SKMBT_36317040717360_eq30.png", 
-        "recognized_symbols": {
-            "a": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 1
-    }, 
-    {
         "true": 21, 
         "image": "SKMBT_36317040717290_eq21.png", 
         "recognized_symbols": {
@@ -207,35 +169,6 @@
         "res": 18
     }, 
     {
-        "true": 32, 
-        "image": "SKMBT_36317040717320_eq32.png", 
-        "recognized_symbols": {
-            "a": 1, 
-            "c": 1, 
-            "frac": 1, 
-            "1": 1, 
-            "3": 1, 
-            "2": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 5
-    }, 
-    {
-        "true": 32, 
-        "image": "SKMBT_36317040717351_eq32.png", 
-        "recognized_symbols": {
-            "c": 1, 
-            "1": 1, 
-            "0": 1, 
-            "3": 1, 
-            "2": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 28
-    }, 
-    {
         "true": 3, 
         "image": "SKMBT_36317040717280_eq3.png", 
         "recognized_symbols": {
@@ -243,22 +176,6 @@
             "sqrt": 1
         }, 
         "res": 2
-    }, 
-    {
-        "true": 31, 
-        "image": "SKMBT_36317040717351_eq31.png", 
-        "recognized_symbols": {
-            "c": 1, 
-            "frac": 1, 
-            "sqrt": 1, 
-            "1": 1, 
-            "3": 1, 
-            "2": 1, 
-            "6": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 5
     }, 
     {
         "true": 4, 
@@ -276,39 +193,20 @@
         "res": 25
     }, 
     {
-        "true": 30, 
-        "image": "SKMBT_36317040717280_eq30.png", 
-        "recognized_symbols": {
-            "a": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 1
-    }, 
-    {
-        "true": 30, 
-        "image": "SKMBT_36317040717362_eq30.png", 
-        "recognized_symbols": {
-            "a": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 1
-    }, 
-    {
         "true": 31, 
         "image": "SKMBT_36317040717291_eq31.png", 
         "recognized_symbols": {
+            "c": 1, 
             "frac": 1, 
-            "-": 1, 
+            "-": 2, 
+            "3": 1, 
             "sqrt": 1, 
             "n": 1, 
             "p": 1, 
-            "3": 1, 
-            "=": 2, 
-            "sin": 1
+            "s": 1, 
+            "=": 2
         }, 
-        "res": 3
+        "res": 14
     }, 
     {
         "true": 19, 
@@ -329,14 +227,15 @@
         "true": 21, 
         "image": "SKMBT_36317040717291_eq21.png", 
         "recognized_symbols": {
-            "a": 1, 
+            "a": 2, 
             "c": 1, 
             "b": 1, 
+            "sqrt": 1, 
             "2": 1, 
-            "4": 1, 
+            "t": 1, 
             "x": 1, 
-            "tan": 1, 
-            "=": 4
+            "=": 4, 
+            "4": 1
         }, 
         "res": 20
     }, 
@@ -365,43 +264,15 @@
     }, 
     {
         "true": 32, 
-        "image": "SKMBT_36317040717291_eq32.png", 
-        "recognized_symbols": {
-            "c": 2, 
-            "frac": 1, 
-            "1": 1, 
-            "2": 1, 
-            "pi": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 5
-    }, 
-    {
-        "true": 32, 
-        "image": "SKMBT_36317040717341_eq32.png", 
-        "recognized_symbols": {
-            "c": 1, 
-            "frac": 1, 
-            "1": 1, 
-            "0": 1, 
-            "3": 1, 
-            "2": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 5
-    }, 
-    {
-        "true": 32, 
         "image": "SKMBT_36317040717362_eq32.png", 
         "recognized_symbols": {
             "a": 1, 
             "frac": 1, 
+            "(": 1, 
             "1": 2, 
-            "2": 1, 
-            "=": 2, 
-            "sin": 1
+            "s": 1, 
+            "2": 2, 
+            "=": 2
         }, 
         "res": 5
     }, 
@@ -410,14 +281,15 @@
         "image": "SKMBT_36317040717280_eq31.png", 
         "recognized_symbols": {
             "a": 1, 
+            "b": 1, 
             "frac": 1, 
-            "sqrt": 1, 
             "3": 1, 
-            "2": 1, 
-            "=": 1, 
-            "sin": 1
+            "sqrt": 1, 
+            "s": 1, 
+            "2": 2, 
+            "=": 1
         }, 
-        "res": 3
+        "res": 5
     }, 
     {
         "true": 7, 
@@ -448,18 +320,6 @@
             "x": 1, 
             "tan": 1, 
             "=": 1
-        }, 
-        "res": 2
-    }, 
-    {
-        "true": 6, 
-        "image": "SKMBT_36317040717290_eq6.png", 
-        "recognized_symbols": {
-            "a": 1, 
-            "b": 1, 
-            "=": 1, 
-            "sin": 1, 
-            "sqrt": 2
         }, 
         "res": 2
     }, 
@@ -513,20 +373,6 @@
         "res": 20
     }, 
     {
-        "true": 34, 
-        "image": "SKMBT_36317040717291_eq34.png", 
-        "recognized_symbols": {
-            "a": 1, 
-            "f": 1, 
-            ")": 1, 
-            "+": 1, 
-            "1": 1, 
-            "=": 1, 
-            "sin": 2
-        }, 
-        "res": 18
-    }, 
-    {
         "true": 27, 
         "image": "SKMBT_36317040717290_eq27.png", 
         "recognized_symbols": {
@@ -556,20 +402,6 @@
         "res": 15
     }, 
     {
-        "true": 31, 
-        "image": "SKMBT_36317040717290_eq31.png", 
-        "recognized_symbols": {
-            "c": 1, 
-            "frac": 1, 
-            "sqrt": 1, 
-            "3": 1, 
-            "2": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 3
-    }, 
-    {
         "true": 27, 
         "image": "SKMBT_36317040717351_eq27.png", 
         "recognized_symbols": {
@@ -587,14 +419,16 @@
         "true": 33, 
         "image": "SKMBT_36317040717290_eq33.png", 
         "recognized_symbols": {
-            "n": 1, 
             "3": 1, 
+            "sqrt": 1, 
+            "n": 1, 
+            "s": 1, 
             "2": 1, 
             "tan": 1, 
-            "=": 1, 
-            "sin": 1
+            "pi": 1, 
+            "=": 1
         }, 
-        "res": 1
+        "res": 3
     }, 
     {
         "true": 21, 
@@ -616,12 +450,14 @@
         "image": "SKMBT_36317040717362_eq31.png", 
         "recognized_symbols": {
             "a": 1, 
+            "(": 1, 
+            "3": 1, 
             "sqrt": 1, 
             "1": 1, 
-            "3": 1, 
+            "s": 1, 
             "2": 1, 
-            "=": 2, 
-            "sin": 1
+            "6": 1, 
+            "=": 2
         }, 
         "res": 30
     }, 
@@ -656,6 +492,22 @@
         "res": 32
     }, 
     {
+        "true": 31, 
+        "image": "SKMBT_36317040717363_eq31.png", 
+        "recognized_symbols": {
+            "cos": 1, 
+            "frac": 1, 
+            "(": 1, 
+            "3": 1, 
+            "sqrt": 1, 
+            "1": 1, 
+            "s": 1, 
+            "2": 1, 
+            "=": 1
+        }, 
+        "res": 32
+    }, 
+    {
         "true": 21, 
         "image": "SKMBT_36317040717362_eq21.png", 
         "recognized_symbols": {
@@ -677,7 +529,6 @@
         "recognized_symbols": {
             "frac": 1, 
             "d": 1, 
-            "n": 1, 
             "1": 2, 
             "2": 2, 
             "4": 1, 
@@ -732,50 +583,26 @@
         "image": "SKMBT_36317040717363_eq35.png", 
         "recognized_symbols": {
             "a": 1, 
+            "c": 1, 
             "+": 1, 
-            "-": 1, 
+            "-": 2, 
             "1": 2, 
+            "s": 1, 
             "6": 1, 
             "tan": 2, 
-            "=": 1, 
-            "sin": 1
+            "=": 1
         }, 
-        "res": 30
-    }, 
-    {
-        "true": 30, 
-        "image": "SKMBT_36317040717291_eq30.png", 
-        "recognized_symbols": {
-            "a": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 1
+        "res": 14
     }, 
     {
         "true": 30, 
         "image": "SKMBT_36317040717351_eq30.png", 
         "recognized_symbols": {
-            "0": 1, 
+            "1": 1, 
+            "0": 2, 
             "c": 1, 
-            "sin": 1
+            "s": 1
         }, 
         "res": 28
-    }, 
-    {
-        "true": 31, 
-        "image": "SKMBT_36317040717360_eq31.png", 
-        "recognized_symbols": {
-            "a": 1, 
-            "b": 1, 
-            "frac": 1, 
-            "-": 1, 
-            "sqrt": 1, 
-            "3": 1, 
-            "2": 1, 
-            "=": 1, 
-            "sin": 1
-        }, 
-        "res": 20
     }
 ]
