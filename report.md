@@ -1,12 +1,16 @@
 # Report of EquationRecognition
 
-## Author
-- [Jiadong Yan](https://github.com/FrankYan93)  
-- [Xinyi Jiang](https://github.com/xyjiang94)  
-- [Zhengyang Zhou](https://github.com/zhengyjo)
-
 ## Description
-Recognize hand-written equations.
+A project to recognize isolated symbols and classify hand-written equations.
+
+## Team member & contribution
+Generally, we have nearly equal responsibility for the project.
+
+- [Jiadong Yan](https://github.com/FrankYan93) : preprocessing.py, recognize.py, recognizeFromShelf.py, partition.py, predict.py
+- [Xinyi Jiang](https://github.com/xyjiang94) : segmentation.py, MinimumSpanningTree.py, classifyEq.py
+- [Zhengyang Zhou](https://github.com/zhengyjo) : DataWrapperFinal.py, MER\_NN.py, readDB.py
+
+
 
 ## Dependencies
 - tensorflow
@@ -21,16 +25,17 @@ Recognize hand-written equations.
 `python predict.py [img folder path]`
 
 ## Build Instructions
-1. `python preprocessing.py` to generate shelf of training data.(we need annotated folder at this directory.)  
+1. `python preprocessing.py`  Generate shelf of training data.(The annotated folder should be at same directory.)  
 2. `python MER_NN.py train [the address we want to save wer model]`
 
 ## Introduction of the frame of project
 The project has two main part. The first part is the neural networks that is trained to recognize isolated symbols. The other part is the algorithm to partition the image correctly, as long as recognize the equation. The second part is inspired by the paper written by NE Matsakis.[1]  
 
-### Neural Network
+### Part one: Neural Network
 At the very first beginning, we decided to use convolutional neural network to recognize the equations directly without segmentation, but we failed as we saw the model could cause more confusions when predicting. Since the time is limited, we switch our way to deal with this project in the current way.
 
-For the neural network, we construct the training model based on Zhihao's CNN on digit-recognizaiton. In order to make the model more efficient, we apply a lot of techniques such as size wrapping, deformation, drop-out rate adjustment and so on, which we will elaborate in **Some Tips and Interesting findings**. Generally, we find that in order to recognize **38** different symbols, we need to include more features on the input of the readout layer. In addition, in case the F(X) is too small, we also have some skip layers to mitigate the effect of vanishing gradient for bottom layer like the following:
+For the neural network, we construct the training model based on Zhihao's CNN on digit-recognizing[2] To make the model more efficient, we apply a lot of techniques such as size wrapping, deformation, drop-out rate adjustment and so on, which we will elaborate in _Some Tips and Interesting findings_. Generally, we find that in order to recognize 38 different symbols, we need to include more features on the input of the readout layer. In addition, in case the F(X) is too small, we also have some skip layers to mitigate the effect of vanishing gradient for bottom layer like the following:
+
 
 ![google](https://ooo.0o0.ooo/2017/05/07/590e299547c07.png)  
 
@@ -38,13 +43,13 @@ Inspired by the Deep Residual Neural Network, we come up with the following stru
 
 1. First layer of convolution: 3 X 3 window, input:1, output:32  
 
-2. a. Second layer of convolution: 3 X 3 window, input:32,output:32  
-   b. Skip layer: 3 X 3 window, input:32,output:64
+2. a. Second layer of convolution: 3 X 3 window, input:32, output:32  
+   b. Skip layer: 3 X 3 window, input:32, output:64
 
 3. Third layer of convolution: 3 X 3 window, input:32, output: 64
 
-4. a. Forth layer of convolution: 3 X 3 window, input:64,output:64  
-   b. Skip layer: 3 X 3 window, input:64,output:128  
+4. a. Forth layer of convolution: 3 X 3 window, input:64, output:64  
+   b. Skip layer: 3 X 3 window, input:64, output:128  
 
 5. Fifth layer of convolution: 3 X 3 window, input:64, output: 128  
 
@@ -53,7 +58,7 @@ Inspired by the Deep Residual Neural Network, we come up with the following stru
 8. readout layer: input:1024, output: 38
 
 
-### partition algorithm
+### Part two: partition algorithm
 In term of part two, the partition algorithm, the basic idea is to divide the equation into different strokes, and find the best way to partition the strokes into symbols. There are 4 steps:
 
 1. divide the equation into different strokes using connected components algorithm
@@ -109,12 +114,13 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 ## Python Files's Details
 
 ### preprocessing.py
-  1. Used regular expression to recognize segmented piece of image.
-  2. Transformed the image to standard 32*32 np array.
-  3. Stored data to a db file as training data to avoid waste of preprocessing time when training.
+1. Used regular expression to recognize segmented piece of image.
+2. Transformed the image to standard 32\*32 np array.
+3. Stored data to a db file as training data to avoid waste of preprocessing time when training.
+
 
 ### MER_NN.py
-	1. The training model file, which contains the whole structure of the neural network.   
+	The training model file, which contains the whole structure of the neural network.   
 	The input of this one is from DataWrapperFianl.py
 
 ### DataWrapperFinal.py
@@ -127,13 +133,19 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 	2. Produce the numpy arrays of training pictures and the corresponding labels. Then we can feed them into DataWrapperFinal.py
 
 ### segmentation.py
-	* This class takes an image path to initiate. It using connected components algorithm to label the different strokes in the image, and calculates the bounding box of each strokes
-	* It can return the image of a stroke cut from the original image. It is also capable of return the image of several combined strokes.
-	* It has two modes, the grey mode which cut image of stroke from the original image and the binary mode.
+
+1. This class takes an image path to initiate. It using connected components algorithm to label the different strokes in the image, and calculates the bounding box of each strokes
+2. It can return the image of a stroke cut from the original image. It is also capable of return the image of several combined strokes.
+3. It has two modes, the grey mode which cut image of stroke from the original image and the binary mode.
+4. Some of the pictures has little white dots that takes few pixels. These noises would be recognized as isolated strokes, which causes the program to recognize more strokes than the actual number. Therefore, we drop the strokes that has less than 50 pixels.
+
 
 ### MinimumSpanningTree
-	* This class takes a list of bounding box of strokes to initiate. It calculates the minimum spanning tree of those strokes using Kruskal’s algorithm.
-	* The weight between any two strokes is the Euclidean distance between the centroids of their bounding boxes
+
+- This class takes a list of bounding boxes of strokes to initiate. It calculates the minimum spanning tree of those strokes using Kruskal' s algorithm.
+- The weight between any two strokes is the Euclidean distance between the centroids of their bounding boxes
+- Its output is a dictionary, whose key = vertex, value = a list of tuples; format of the tuple: [connected vertex, weight]
+
 
 ### partition.py
   - The `Partition` class can be initialized with a `MinimumSpanningTree`'s dict output, a `Segmentation` instance that is related to a specific image(of png format), a `session` and a shared `SymbolRecognition` instance that is initialized with model_path. It's an error to create a `session` and a `SymbolRecognition` inside the `Partition` class since we would create multiple partition class to recognize multiple equations.
@@ -166,11 +178,22 @@ Step 3 gives us a list of symbols and their bounding box. we can use a simple cl
 
 ## Result Analysis
 
+We run this program on every equation pictures in annotated, and recognized 347 equations out of 389 pictures, the accuracy rate is 89%. To analyze the results, we save the results of incorrectly classified equations in lib/err.json.
+The first type of mistakes is caused by the incomplete equation pictures such as figure 2.
+Figure 2. incomplete equation
+
+The second type of mistakes is caused by strokes that is not connected as expected. As figure 3 shown, the square root symbol is supposed to be connected, however, it is written as two parts.  In the partition algorithm, we use enumeration to combine strokes such as division, therefore, the algorithm will fail when unexpected situation appears.
+
+This problem can be solved if we use the previous time-consuming partition algorithm, where we examine the maximum probability of the symbols, keeping the strokes with high probability while try to combine the strokes with low probability. Therefore, the separated stroked of square root may have low probability because the neural network is not trained to recognize them, which will lead to combining the strokes. However, there comes the new problem, only neighbors in mst would have the chance to combine. To make the separated strokes of square root be neighbors, the weight of the edge between them must be small. We may have to adjust he way we calculate weight, for example, taking the minimum distance of bounding box into consideration.
+
+Figure 3. stroke that is not connected
+
+The third type of mistakes is caused by that strokes of different symbols are connected, such as figure 4. The “n” of “tan” is connected to “6” unexpectedly. This problem is unsolvable for current frame of projects, because the algorithm assumes that there’s no stroke that belongs to two symbols at the same time.
+
+Figure 4. strokes of different symbols are connected
+
+To solve this problem, the only solution is to use different project frame. For example, a neural network that takes the whole equation as input, and use a window to scan through the picture. This causes new issue: First, we have to choose appropriate window size, second, the size of symbols affects recognizing, it may have trouble recognize 2 as square.
+
+
 ## Reference
 1. Matsakis, Nicholas E. Recognition of handwritten mathematical expressions. Diss. Massachusetts Institute of Technology, 1999.
-
-## Contribution
-Generally we have nearly equal responsibility for the project.
-- Jiadong Yan: preprocessing.py, recognize.py, recognizeFromShelf.py, partition.py, predict.py
-- Xinyi Jiang: segmentation.py, MinimumSpanningTree.py, classifyEq.py
-- Zhengyang Zhou: DataWrapperFinal.py, MER_NN.py, readDB.py
